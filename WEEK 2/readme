@@ -1,0 +1,271 @@
+# Hand Gesture Detection — Custom YOLOv8 Object Detection System
+
+**AI Summer Fellowship 2026 — Computer Vision Engineering Track, Week 2**
+
+A custom-trained YOLOv8 object detection system that recognizes 5 hand gestures in real time via webcam. This repository covers the full pipeline: dataset collection, annotation, training, evaluation, experimentation, and a deployed detection application.
+
+---
+
+## Table of Contents
+
+- [Project Overview](#project-overview)
+- [Assignment 1 — Dataset Creation](#assignment-1--dataset-creation)
+- [Assignment 2 — Annotation](#assignment-2--annotation)
+- [Assignment 3 — Model Training](#assignment-3--model-training)
+- [Assignment 4 — Evaluation](#assignment-4--evaluation)
+- [Assignment 5 — Detection Application](#assignment-5--detection-application)
+- [Assignment 6 — Research Report](#assignment-6--research-report)
+- [Assignment 7 — Experiments](#assignment-7--experiments)
+- [Assignment 8 — Architecture Documentation](#assignment-8--architecture-documentation)
+- [Assignment 9 — Builder Journal](#assignment-9--builder-journal)
+- [Repository Structure](#repository-structure)
+- [Installation & Usage](#installation--usage)
+- [Demo Video](#demo-video)
+
+---
+
+## Project Overview
+
+**Classes (5):** `fist`, `open palm`, `peace`, `thumbs down`, `thumbs up`
+
+**Final model:** YOLOv8n, trained on a custom dataset of 311 self-collected and annotated images, achieving **0.969 mAP50** and **0.937 precision** on the validation set.
+
+---
+
+## Assignment 1 — Dataset Creation
+
+- **Total images collected:** 311 (exceeds the 300-image minimum)
+- **Sources:** Self-collected across multiple people, to maximize variety within the available time
+- **Variation included:**
+  - Different backgrounds (plain walls, cluttered rooms, varied colors)
+  - Different lighting conditions (bright, dim, natural, artificial)
+  - Different viewing angles and hand rotations
+  - Partial occlusions and varied hand-to-camera distances (scale variation)
+
+### Dataset Split
+
+| Split | Ratio | Purpose |
+|---|---|---|
+| Train | ~70% | Model training |
+| Validation | ~20% | Hyperparameter tuning / mid-training evaluation |
+| Test | ~10% | Final held-out evaluation |
+
+Split was performed and documented via Roboflow during dataset versioning, and exported in YOLOv8 format with the ratio preserved.
+
+---
+
+## Assignment 2 — Annotation
+
+- **Tool used:** Roboflow (bounding box annotation, class labeling, dataset versioning/export)
+- **Process:** Every image was manually annotated with a tight bounding box around the visible hand gesture. An initial annotation pass used boxes that were too loose (including wrist/forearm/background); the dataset was re-annotated with corrected, tightly-fitted bounding boxes to improve model precision.
+
+| Metric | Value |
+|---|---|
+| Number of Images | 311 |
+| Number of Classes | 5 |
+| Classes | fist, open palm, peace, thumbs down, thumbs up |
+| Annotation Format | YOLO (normalized `class x_center y_center width height` per image) |
+
+---
+
+## Assignment 3 — Model Training
+
+**Framework:** Ultralytics YOLOv8 (trained in Google Colab, Tesla T4 GPU)
+
+**Final training configuration:**
+
+| Parameter | Value |
+|---|---|
+| Base model | `yolov8n.pt` (pretrained, transfer learning) |
+| Epochs (set / actual via early stopping) | 100 / ~69 |
+| Image size (imgsz) | 640 |
+| Batch size | 16 |
+| Learning rate (lr0) | 0.01 (optimizer auto-selected AdamW) |
+| Patience (early stopping) | 20 |
+
+Multiple training runs were conducted while iterating on the dataset and hyperparameters — see [Assignment 7](#assignment-7--experiments) for the full experiment log.
+
+---
+
+## Assignment 4 — Evaluation
+
+**Final model validation results:**
+
+| Metric | Value |
+|---|---|
+| Precision | 0.937 |
+| Recall | 0.907 |
+| mAP50 | 0.969 |
+| mAP50-95 | 0.668 |
+
+**Per-class results:**
+
+| Class | Precision | Recall | mAP50 | mAP50-95 |
+|---|---|---|---|---|
+| fist | 1.000 | 0.856 | 0.954 | 0.658 |
+| open palm | 0.929 | 0.917 | 0.984 | 0.682 |
+| peace | 0.904 | 0.900 | 0.978 | 0.588 |
+| thumbs down | 0.872 | 1.000 | 0.995 | 0.833 |
+| thumbs up | 0.982 | 0.864 | 0.934 | 0.578 |
+
+Confusion matrix and sample prediction images are included in `/docs/evaluation/`.
+
+**Strengths:** `thumbs down` and `open palm` are detected almost perfectly. Overall precision/recall balance is strong across all 5 classes with no major outliers.
+
+**Weaknesses:** `thumbs up` has the lowest mAP50-95, indicating slightly less precise bounding box localization compared to other classes — a good candidate for additional targeted training data in future iterations.
+
+---
+
+## Assignment 5 — Detection Application
+
+**Stack:** HTML, CSS, JavaScript (frontend) + Python, Flask, Ultralytics YOLO (backend)
+
+**Implemented features:**
+
+| Feature | Status |
+|---|---|
+| Image Upload + Detection | ✅ |
+| Webcam Real-Time Detection | ✅ |
+| Confidence Threshold Slider | ✅ |
+| Detection Statistics (object count, processing time, confidence scores) | ✅ |
+| Video Upload Detection | 🟡 In progress |
+| Export Annotated Results | 🟡 In progress |
+
+**Bonus features implemented:**
+- Detection Log (live scrolling list of recent detections)
+- Dashboard-style stats panel (objects detected, FPS, average confidence)
+- Dark Theme (custom black/grey professional UI with amber accent)
+- Temporal smoothing to reduce false-positive flicker on live video
+
+See `/app` for the full application code and setup instructions.
+
+---
+
+## Assignment 6 — Research Report
+
+**"Modern Object Detection Systems"** — a comparative report covering YOLO, Faster R-CNN, SSD, and DETR across speed, accuracy, and use cases.
+
+📄 See [`/docs/research_report.docx`](./docs/research_report.docx) (max 4 pages, per assignment spec)
+
+---
+
+## Assignment 7 — Experiments
+
+Four+ experiments were conducted and documented:
+
+| # | Experiment | Summary |
+|---|---|---|
+| 1 | Different epoch values | Early stopping consistently converged between 40-70 epochs depending on dataset version |
+| 2 | Different image sizes | 640 imgsz outperformed 512 imgsz, matching real-world inference resolution |
+| 3 | Augmented vs. non-augmented training | Augmentation reduced precision/mAP50 across three independent tests — non-augmented data consistently performed better on this dataset size |
+| 4 | Different YOLO model sizes (n / s / m) | YOLOv8n outperformed both YOLOv8s and YOLOv8m on mAP50 and mAP50-95, while being smaller and faster — model capacity was not the bottleneck |
+
+📄 Full experiment log and analysis: [`/docs/model_comparison_report.docx`](./docs/model_comparison_report.docx)
+
+---
+
+## Assignment 8 — Architecture Documentation
+
+```
+Image / Webcam Frame
+        ↓
+   Preprocessing
+        ↓
+   YOLO Model (YOLOv8n)
+        ↓
+   Bounding Boxes
+        ↓
+  Confidence Filtering
+        ↓
+    Visualization
+        ↓
+      Output
+```
+
+📄 Full architecture diagram and documentation: [`/docs/architecture.docx`](./docs/architecture.docx) (max 3 pages, per assignment spec)
+
+---
+
+## Assignment 9 — Builder Journal
+
+Covers dataset challenges, annotation challenges, training challenges, performance improvements, lessons learned, and Week 3 goals.
+
+📄 See [`/docs/builder_journal.docx`](./docs/builder_journal.docx) (max 2 pages, per assignment spec)
+
+---
+
+## Repository Structure
+
+```
+.
+├── app/                        # Detection application
+│   ├── index.html
+│   ├── style.css
+│   ├── script.js
+│   ├── app.py
+│   ├── requirements.txt
+│   └── best.pt                  # Trained model weights
+│
+├── dataset/                    # Dataset (or link to Roboflow project)
+│   ├── train/
+│   ├── valid/
+│   ├── test/
+│   └── data.yaml
+│
+├── notebooks/                  # Training notebooks
+│   ├── training.ipynb
+│   └── model_comparison.ipynb
+│
+├── docs/                       # Written deliverables
+│   ├── research_report.docx
+│   ├── model_comparison_report.docx
+│   ├── architecture.docx
+│   ├── builder_journal.docx
+│   └── evaluation/
+│       ├── confusion_matrix.png
+│       └── sample_predictions.png
+│
+└── README.md
+```
+
+---
+
+## Installation & Usage
+
+### 1. Clone the repository
+```bash
+git clone <your-repo-url>
+cd <repo-name>
+```
+
+### 2. Set up the detection application
+```bash
+cd app
+pip3 install -r requirements.txt
+```
+
+Ensure `best.pt` (trained model weights) is present in the `app/` folder.
+
+### 3. Run the backend
+```bash
+python3 app.py
+```
+
+### 4. Open the frontend
+Open `app/index.html` in your browser, click **Start Camera**, and grant camera permission.
+
+---
+
+## Demo Video
+
+📺 [Demo video link here] — 8–10 minute walkthrough covering problem statement, dataset, annotation, training, evaluation, and live detection demo.
+
+---
+
+## Tech Stack
+
+- **Model:** Ultralytics YOLOv8 (Nano)
+- **Annotation:** Roboflow
+- **Training:** Google Colab (Tesla T4 GPU)
+- **Backend:** Python, Flask
+- **Frontend:** HTML, CSS, JavaScript
