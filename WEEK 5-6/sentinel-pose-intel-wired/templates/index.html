@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SENTRY-POSE · Activity Intelligence Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #070c0a;
+    --bg-2: #0a1310;
+    --panel: #0d1a15;
+    --panel-2: #112420;
+    --panel-3: #16302a;
+    --line: #1c352c;
+    --line-soft: #142822;
+    --text: #dcf3e6;
+    --text-dim: #7fa695;
+    --text-faint: #4d6c60;
+    --accent: #37ffa0;
+    --accent-dim: #1f8f5c;
+    --accent-soft: rgba(55,255,160,0.1);
+    --amber: #ffb454;
+    --amber-soft: rgba(255,180,84,0.12);
+    --danger: #ff5468;
+    --danger-soft: rgba(255,84,104,0.12);
+    --blue: #5fb7ff;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Inter', -apple-system, sans-serif;
+    --radius: 3px;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(55,255,160,0.05), transparent 40%),
+      radial-gradient(circle at 85% 100%, rgba(95,183,255,0.04), transparent 45%);
+  }
+  ::selection{ background: var(--accent-dim); color: #041a10; }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+
+  /* ---------- shell ---------- */
+  .shell{
+    display: grid;
+    grid-template-columns: 216px 1fr;
+    grid-template-rows: 52px 1fr;
+    grid-template-areas:
+      "brand topbar"
+      "nav   main";
+    height: 100vh;
+  }
+
+  /* ---------- brand / topbar ---------- */
+  .brand{
+    grid-area: brand;
+    display:flex; align-items:center; gap:10px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    background: var(--bg-2);
+  }
+  .brand .mark{
+    width: 26px; height: 26px; position: relative; flex-shrink:0;
+  }
+  .brand .mark svg{ width:100%; height:100%; }
+  .brand-text{ display:flex; flex-direction:column; line-height:1.05; }
+  .brand-text b{ font-family: var(--mono); font-size:13px; letter-spacing:1.5px; color: var(--text); }
+  .brand-text span{ font-size:9px; letter-spacing:1px; color: var(--text-faint); text-transform:uppercase; margin-top:2px;}
+
+  .topbar{
+    grid-area: topbar;
+    display:flex; align-items:center;
+    padding: 0 18px;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-2);
+    gap: 24px;
+    overflow: hidden;
+  }
+  .stat-strip{ display:flex; align-items:center; gap:22px; font-family: var(--mono); flex: 1; }
+  .stat-chip{ display:flex; align-items:baseline; gap:6px; white-space:nowrap; }
+  .stat-chip .v{ font-size:14px; font-weight:600; color: var(--text); font-variant-numeric: tabular-nums;}
+  .stat-chip .l{ font-size:9px; color: var(--text-faint); letter-spacing:0.8px; text-transform:uppercase;}
+  .stat-chip.warn .v{ color: var(--amber); }
+  .stat-chip.crit .v{ color: var(--danger); }
+  .stat-chip.ok .v{ color: var(--accent); }
+  .divider-dot{ width:3px; height:3px; border-radius:50%; background: var(--line-soft); }
+
+  .live-pill{
+    display:flex; align-items:center; gap:7px;
+    padding: 5px 10px; border:1px solid var(--line); border-radius: 20px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.6px; color: var(--text-dim);
+    flex-shrink:0;
+  }
+  .live-dot{ width:6px; height:6px; border-radius:50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: pulse-dot 1.8s ease-in-out infinite; }
+  @keyframes pulse-dot{ 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+
+  /* ---------- nav ---------- */
+  nav{
+    grid-area: nav;
+    border-right: 1px solid var(--line);
+    background: var(--bg-2);
+    padding: 14px 10px;
+    display:flex; flex-direction:column; gap: 2px;
+  }
+  .nav-label{ font-family: var(--mono); font-size:9px; color: var(--text-faint); letter-spacing:1.4px; text-transform:uppercase; padding: 10px 8px 6px; }
+  .nav-btn{
+    display:flex; align-items:center; gap:10px;
+    padding: 9px 10px; border-radius: var(--radius);
+    color: var(--text-dim); font-size:12.5px; font-weight:500;
+    cursor:pointer; border:1px solid transparent; background:none;
+    text-align:left; width:100%; font-family: var(--sans);
+    transition: background .15s, color .15s, border-color .15s;
+  }
+  .nav-btn svg{ width:15px; height:15px; flex-shrink:0; opacity:0.85; }
+  .nav-btn:hover{ background: var(--panel-2); color: var(--text); }
+  .nav-btn.active{ background: var(--accent-soft); color: var(--accent); border-color: rgba(55,255,160,0.25); }
+  .nav-btn .badge{
+    margin-left:auto; font-family: var(--mono); font-size:10px; background: var(--danger-soft); color: var(--danger);
+    padding: 1px 6px; border-radius: 8px; font-weight:600;
+  }
+  .nav-foot{ margin-top:auto; padding: 10px 8px; border-top:1px solid var(--line); font-family: var(--mono); font-size:9.5px; color: var(--text-faint); }
+  .nav-foot b{ color: var(--text-dim); }
+
+  /* ---------- main ---------- */
+  main{ grid-area: main; overflow-y:auto; padding: 18px 22px 40px; }
+  .view{ display:none; animation: fade-in .25s ease; }
+  .view.active{ display:block; }
+  @keyframes fade-in{ from{opacity:0; transform: translateY(4px);} to{opacity:1; transform:none;} }
+
+  .view-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px;}
+  .view-head h1{ font-family: var(--mono); font-size:16px; font-weight:600; letter-spacing:0.4px; }
+  .view-head p{ color: var(--text-faint); font-size:11.5px; margin-top:3px; }
+
+  /* ---------- grid / cards ---------- */
+  .grid{ display:grid; gap: 14px; }
+  .cols-4{ grid-template-columns: repeat(4, 1fr); }
+  .cols-3{ grid-template-columns: repeat(3, 1fr); }
+  .cols-2{ grid-template-columns: 1.35fr 1fr; }
+  @media (max-width: 1180px){ .cols-4{grid-template-columns:repeat(2,1fr);} .cols-2{grid-template-columns:1fr;} }
+
+  .panel{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px;
+  }
+  .panel-title{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:12px;
+  }
+  .panel-title h3{ font-family: var(--mono); font-size:10.5px; letter-spacing:1px; text-transform:uppercase; color: var(--text-dim); font-weight:600;}
+  .panel-title .hint{ font-size:10px; color: var(--text-faint); font-family: var(--mono); }
+
+  /* metric cards */
+  .metric-card{ position:relative; overflow:hidden; }
+  .metric-card .m-label{ font-family: var(--mono); font-size:9.5px; letter-spacing:1px; text-transform:uppercase; color: var(--text-faint); }
+  .metric-card .m-value{ font-family: var(--mono); font-size:26px; font-weight:700; margin-top:6px; color: var(--text); font-variant-numeric: tabular-nums; }
+  .metric-card .m-sub{ font-size:10.5px; color: var(--text-dim); margin-top:4px; }
+  .metric-card .m-sub.up{ color: var(--accent); }
+  .metric-card .m-sub.down{ color: var(--danger); }
+  .metric-card .m-spark{ position:absolute; right:10px; bottom:10px; opacity:0.5; }
+
+  /* ---------- live feed panel ---------- */
+  .feed-panel{ position:relative; }
+  .feed-frame{
+    position:relative; aspect-ratio: 16/9; width:100%;
+    background:
+      linear-gradient(rgba(55,255,160,0.035) 1px, transparent 1px) 0 0/100% 24px,
+      linear-gradient(90deg, rgba(55,255,160,0.035) 1px, transparent 1px) 0 0/24px 100%,
+      radial-gradient(ellipse at center, #0e1e18 0%, #060b09 100%);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow:hidden;
+  }
+  .feed-frame::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background: repeating-linear-gradient(0deg, rgba(0,0,0,0.12) 0px, rgba(0,0,0,0.12) 1px, transparent 1px, transparent 3px);
+    mix-blend-mode: overlay; opacity:0.35;
+  }
+  .scan-line{ position:absolute; left:0; right:0; height:60px; background: linear-gradient(180deg, transparent, rgba(55,255,160,0.06), transparent); animation: scan-move 5s linear infinite; pointer-events:none;}
+  @keyframes scan-move{ 0%{ top:-60px; } 100%{ top:100%; } }
+  .feed-hud-top{ position:absolute; top:10px; left:12px; right:12px; display:flex; justify-content:space-between; font-family: var(--mono); font-size:10px; color: var(--accent); text-shadow:0 0 6px rgba(55,255,160,0.5); z-index:2;}
+  .feed-hud-bottom{ position:absolute; bottom:10px; left:12px; right:12px; display:flex; justify-content:space-between; font-family: var(--mono); font-size:9.5px; color: var(--text-dim); z-index:2;}
+  .corner{ position:absolute; width:16px; height:16px; border-color: var(--accent-dim); opacity:0.8; }
+  .corner.tl{ top:8px; left:8px; border-top:2px solid; border-left:2px solid; }
+  .corner.tr{ top:8px; right:8px; border-top:2px solid; border-right:2px solid; }
+  .corner.bl{ bottom:8px; left:8px; border-bottom:2px solid; border-left:2px solid; }
+  .corner.br{ bottom:8px; right:8px; border-bottom:2px solid; border-right:2px solid; }
+
+  .skel-svg{ position:absolute; inset:0; width:100%; height:100%; }
+  .skel-box{ stroke: var(--accent); stroke-dasharray: 3 2; fill: none; opacity:0.8; }
+  .skel-tag{ font-family: var(--mono); font-size: 8.5px; fill: var(--accent); }
+  .skel-bone{ stroke: var(--accent); stroke-width:1.4; opacity:0.85; }
+  .skel-joint{ fill: var(--accent); }
+  .skel-box.fall{ stroke: var(--danger); }
+  .skel-bone.fall{ stroke: var(--danger); }
+  .skel-joint.fall{ fill: var(--danger); }
+  .skel-tag.fall{ fill: var(--danger); }
+
+  .feed-toolbar{ display:flex; align-items:center; gap:10px; margin-top:10px; flex-wrap:wrap; }
+  .toggle{ display:flex; align-items:center; gap:6px; font-size:11px; color: var(--text-dim); cursor:pointer; user-select:none;}
+  .toggle input{ accent-color: var(--accent); }
+  .btn{
+    font-family: var(--mono); font-size:10.5px; letter-spacing:0.4px;
+    padding: 6px 11px; border-radius: var(--radius); border:1px solid var(--line);
+    background: var(--panel-2); color: var(--text-dim); cursor:pointer;
+    transition: all .15s;
+  }
+  .btn:hover{ border-color: var(--accent-dim); color: var(--text); }
+  .btn.primary{ background: var(--accent-soft); border-color: rgba(55,255,160,0.3); color: var(--accent); }
+  .btn.danger{ background: var(--danger-soft); border-color: rgba(255,84,104,0.3); color: var(--danger); }
+  .btn.small{ padding:4px 9px; font-size:9.5px; }
+  select, input[type=text], input[type=number], input[type=date]{
+    background: var(--panel-2); border:1px solid var(--line); color: var(--text);
+    font-family: var(--sans); font-size:11.5px; padding:6px 8px; border-radius: var(--radius);
+  }
+  select:focus, input:focus{ outline: 1px solid var(--accent-dim); }
+
+  /* ---------- people list ---------- */
+  .person-row{
+    display:flex; align-items:center; gap:10px;
+    padding: 9px 8px; border-radius: var(--radius); border:1px solid var(--line-soft);
+    margin-bottom:7px; background: var(--panel-2);
+  }
+  .person-id{ font-family: var(--mono); font-size:11px; color: var(--text-dim); width:44px; flex-shrink:0;}
+  .avatar-skel{ width:26px; height:26px; flex-shrink:0; opacity:0.9; }
+  .person-activity{ display:flex; flex-direction:column; flex:1; min-width:0; }
+  .person-activity b{ font-size:12px; }
+  .person-activity span{ font-size:10px; color: var(--text-faint); font-family: var(--mono); }
+  .conf-bar{ width:60px; height:4px; background: var(--line-soft); border-radius:2px; overflow:hidden; flex-shrink:0;}
+  .conf-bar i{ display:block; height:100%; background: var(--accent); }
+  .badge{
+    font-family: var(--mono); font-size:9.5px; padding:3px 8px; border-radius:10px; letter-spacing:0.3px; flex-shrink:0;
+    text-transform:uppercase; font-weight:600;
+  }
+  .badge.standing{ background: rgba(95,183,255,0.12); color: var(--blue); }
+  .badge.walking{ background: var(--accent-soft); color: var(--accent); }
+  .badge.sitting{ background: rgba(200,180,255,0.12); color: #c8b4ff; }
+  .badge.bending{ background: var(--amber-soft); color: var(--amber); }
+  .badge.hand_raised{ background: rgba(95,183,255,0.12); color: var(--blue); }
+  .badge.fallen, .badge.fall{ background: var(--danger-soft); color: var(--danger); }
+  .badge.waving{ background: rgba(200,180,255,0.12); color: #c8b4ff; }
+
+  /* ---------- charts ---------- */
+  canvas{ display:block; width:100%; }
+
+  /* ---------- alerts ---------- */
+  .alert-item{
+    display:flex; gap:12px; padding:11px 10px; border:1px solid var(--line-soft); border-radius: var(--radius);
+    background: var(--panel-2); margin-bottom:8px; align-items:flex-start;
+  }
+  .alert-item.crit{ border-left: 3px solid var(--danger); }
+  .alert-item.warn{ border-left: 3px solid var(--amber); }
+  .alert-item.resolved{ opacity:0.55; }
+  .alert-thumb{
+    width:52px; height:38px; border-radius:2px; flex-shrink:0;
+    background: linear-gradient(135deg, #16302a, #0a1310); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; color: var(--text-faint);
+  }
+  .alert-body{ flex:1; min-width:0; }
+  .alert-body .top{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .alert-body b{ font-size:12px; }
+  .alert-body .meta{ font-family: var(--mono); font-size:10px; color: var(--text-faint); margin-top:3px; }
+  .status-chip{ font-family: var(--mono); font-size:9px; padding:2px 7px; border-radius:8px; text-transform:uppercase; letter-spacing:0.3px; font-weight:600;}
+  .status-chip.possible{ background: var(--amber-soft); color: var(--amber); }
+  .status-chip.confirmed, .status-chip.active{ background: var(--danger-soft); color: var(--danger); }
+  .status-chip.acknowledged{ background: rgba(95,183,255,0.12); color: var(--blue); }
+  .status-chip.resolved{ background: var(--accent-soft); color: var(--accent); }
+  .alert-actions{ display:flex; gap:6px; flex-shrink:0; align-items:center; }
+
+  /* ---------- table ---------- */
+  .filters{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px; }
+  .filters label{ font-family: var(--mono); font-size:9.5px; color: var(--text-faint); display:block; margin-bottom:3px; letter-spacing:0.5px; text-transform:uppercase;}
+  table{ width:100%; border-collapse: collapse; font-size:12px; }
+  thead th{
+    text-align:left; font-family: var(--mono); font-size:9.5px; letter-spacing:0.6px; text-transform:uppercase;
+    color: var(--text-faint); padding: 8px 10px; border-bottom:1px solid var(--line); font-weight:600;
+  }
+  tbody td{ padding: 9px 10px; border-bottom:1px solid var(--line-soft); color: var(--text-dim); }
+  tbody tr:hover{ background: var(--panel-2); }
+  tbody b{ color: var(--text); font-weight:500;}
+  .mono-cell{ font-family: var(--mono); font-size:11px; }
+  .table-foot{ display:flex; justify-content:space-between; align-items:center; margin-top:12px; }
+
+  /* ---------- config ---------- */
+  .cfg-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:16px 24px; }
+  @media (max-width:900px){ .cfg-grid{grid-template-columns:1fr;} }
+  .field{ margin-bottom:14px; }
+  .field label{ display:flex; justify-content:space-between; font-size:11.5px; color: var(--text-dim); margin-bottom:6px; }
+  .field label .val{ font-family: var(--mono); color: var(--accent); }
+  .field input[type=range]{ width:100%; accent-color: var(--accent); }
+  .field select, .field input[type=text]{ width:100%; }
+  .field .desc{ font-size:10px; color: var(--text-faint); margin-top:4px; line-height:1.4; }
+  .chip-select{ display:flex; flex-wrap:wrap; gap:6px; }
+  .chip-select .chip{
+    font-family: var(--mono); font-size:10.5px; padding:5px 10px; border-radius:14px; border:1px solid var(--line);
+    color: var(--text-faint); cursor:pointer; user-select:none; transition: all .15s;
+  }
+  .chip-select .chip.on{ background: var(--accent-soft); border-color: rgba(55,255,160,0.35); color: var(--accent); }
+  .save-bar{ display:flex; justify-content:flex-end; gap:10px; margin-top:6px; padding-top:16px; border-top:1px solid var(--line); }
+  .save-note{ font-family: var(--mono); font-size:10px; color: var(--text-faint); align-self:center; margin-right:auto; }
+
+  .prototype-note{
+    font-family: var(--mono); font-size:10px; color: var(--amber); background: var(--amber-soft);
+    border: 1px solid rgba(255,180,84,0.25); padding:8px 10px; border-radius: var(--radius); margin-bottom:14px;
+    line-height:1.5;
+  }
+
+  ::-webkit-scrollbar{ width:9px; height:9px; }
+  ::-webkit-scrollbar-track{ background: transparent; }
+  ::-webkit-scrollbar-thumb{ background: var(--panel-3); border-radius:5px; }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <div class="brand">
+    <div class="mark">
+      <svg viewBox="0 0 26 26" fill="none">
+        <circle cx="13" cy="5.5" r="2.6" stroke="var(--accent)" stroke-width="1.4"/>
+        <path d="M13 8.5V16M13 10.5L7 13M13 10.5L19 13M13 16L8.5 22M13 16L17.5 22" stroke="var(--accent)" stroke-width="1.4" stroke-linecap="round"/>
+        <circle cx="7" cy="13" r="1.1" fill="var(--accent)"/>
+        <circle cx="19" cy="13" r="1.1" fill="var(--accent)"/>
+      </svg>
+    </div>
+    <div class="brand-text">
+      <b>SENTRY-POSE</b>
+      <span>Activity Intelligence</span>
+    </div>
+  </div>
+
+  <div class="topbar">
+    <div class="stat-strip" id="statStrip">
+      <div class="stat-chip"><span class="v" id="statFps">--</span><span class="l">fps</span></div>
+      <div class="divider-dot"></div>
+      <div class="stat-chip ok"><span class="v" id="statPeople">0</span><span class="l">active people</span></div>
+      <div class="divider-dot"></div>
+      <div class="stat-chip warn"><span class="v" id="statAlerts">0</span><span class="l">active alerts</span></div>
+      <div class="divider-dot"></div>
+      <div class="stat-chip"><span class="v" id="statTracked">0</span><span class="l">total tracked today</span></div>
+      <div class="divider-dot"></div>
+      <div class="stat-chip"><span class="v" id="statLatency">--</span><span class="l">ms latency</span></div>
+    </div>
+    <div class="live-pill"><span class="live-dot"></span> LIVE · CAM-01 · yolov8n-pose</div>
+  </div>
+
+  <nav>
+    <div class="nav-label">Monitor</div>
+    <button class="nav-btn active" data-view="live">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none"/></svg>
+      Live Monitor
+    </button>
+    <button class="nav-btn" data-view="alerts">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg>
+      Alerts
+      <span class="badge" id="navAlertBadge">0</span>
+    </button>
+    <div class="nav-label">Records</div>
+    <button class="nav-btn" data-view="history">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M3 4v5h5M12 7v5l4 2"/></svg>
+      Activity History
+    </button>
+    <button class="nav-btn" data-view="analytics">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
+      Analytics
+    </button>
+    <div class="nav-label">System</div>
+    <button class="nav-btn" data-view="config">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="2.8"/><path d="M19.4 13a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V19a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 9 17.36a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.64 13a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.64 7a1.7 1.7 0 0 0-.34-1.87l-.06-.06A2 2 0 1 1 7.07 2.24l.06.06A1.7 1.7 0 0 0 9 2.64a1.7 1.7 0 0 0 1-1.55V1a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.36 7a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/></svg>
+      Configuration
+    </button>
+    <div class="nav-foot">Session <b id="sessionClock">00:00:00</b><br>Rec: 2023-BS-AI-093</div>
+  </nav>
+
+  <main>
+
+    <!-- ======================= LIVE MONITOR ======================= -->
+    <section class="view active" id="view-live">
+      <div class="view-head">
+        <div><h1>Live Monitor</h1><p>Pose estimation · tracking · rule-based activity recognition, updated in real time.</p></div>
+      </div>
+
+      <div class="grid cols-4" style="margin-bottom:14px;">
+        <div class="panel metric-card">
+          <div class="m-label">Total Activities</div>
+          <div class="m-value" id="mTotal">0</div>
+          <div class="m-sub up" id="mTotalSub">+0 last hour</div>
+        </div>
+        <div class="panel metric-card">
+          <div class="m-label">Falls Detected</div>
+          <div class="m-value" id="mFalls" style="color:var(--danger);">0</div>
+          <div class="m-sub" id="mFallsSub">0 today</div>
+        </div>
+        <div class="panel metric-card">
+          <div class="m-label">Posture-Risk Events</div>
+          <div class="m-value" id="mPosture" style="color:var(--amber);">0</div>
+          <div class="m-sub" id="mPostureSub">threshold 15s</div>
+        </div>
+        <div class="panel metric-card">
+          <div class="m-label">Reps Counted (Squats)</div>
+          <div class="m-value" id="mReps">0</div>
+          <div class="m-sub" id="mRepsSub">Person P-02</div>
+        </div>
+      </div>
+
+      <div class="grid cols-2">
+        <div class="panel feed-panel">
+          <div class="panel-title">
+            <h3>Camera Feed — CAM-01 · Entrance Hall</h3>
+            <span class="hint" id="feedClock">00:00:00</span>
+          </div>
+          <div class="feed-frame" id="feedFrame">
+            <img id="feedImg" src="" alt="Live camera feed" style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain; display:none;">
+            <div class="scan-line" id="scanLine"></div>
+            <div class="corner tl"></div><div class="corner tr"></div>
+            <div class="corner bl"></div><div class="corner br"></div>
+            <div class="feed-hud-top">
+              <span id="feedRes">Pose+bbox overlay rendered server-side</span>
+              <span id="feedModel">POSE: yolov8n-pose · conf ≥ 0.5</span>
+            </div>
+            <div id="feedOffline" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; text-align:center; padding:20px;">
+              <span style="font-family:var(--mono); font-size:11px; color:var(--text-faint); letter-spacing:0.5px;">PIPELINE OFFLINE</span>
+              <span style="font-family:var(--mono); font-size:9.5px; color:var(--text-faint); max-width:340px;" id="feedOfflineNote">Set a source below and press Start to begin streaming.</span>
+            </div>
+            <div class="feed-hud-bottom">
+              <span id="feedDet">detections: 0</span>
+              <span id="feedFrameNo">frame #0</span>
+            </div>
+          </div>
+          <div class="feed-toolbar">
+            <input type="text" id="sourceInput" value="0" placeholder="0 (webcam), path/to/video.mp4, or rtsp://..." style="min-width:220px; flex:1;">
+            <button class="btn primary" id="btnStart">▶ Start</button>
+            <button class="btn danger" id="btnStop">■ Stop</button>
+            <button class="btn" id="btnSnapshot">Snapshot</button>
+          </div>
+          <div class="feed-toolbar" style="margin-top:6px;">
+            <input type="file" id="videoFileInput" accept=".mp4,.avi,.mov,.mkv,.webm,.m4v,.wmv" style="display:none;">
+            <button class="btn" id="btnUploadVideo">⬆ Upload video file</button>
+            <span class="hint" id="uploadStatusNote" style="font-family:var(--mono); font-size:10px;"></span>
+          </div>
+          <div class="feed-toolbar" style="margin-top:6px;">
+            <div class="progress-track" id="uploadProgressTrack" style="display:none; flex:1; height:4px; background:var(--panel-3); border-radius:2px; overflow:hidden;">
+              <div class="progress-fill" id="uploadProgressFill" style="height:100%; width:0%; background:var(--accent, #3ddc97); transition:width 0.15s;"></div>
+            </div>
+          </div>
+          <div class="feed-toolbar" style="margin-top:6px;">
+            <span class="hint" id="pipelineErrorNote" style="color:var(--danger); font-family:var(--mono); font-size:10px;"></span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">
+            <h3>Tracked People</h3>
+            <span class="hint" id="peopleCountHint">0 active</span>
+          </div>
+          <div id="peopleList"></div>
+        </div>
+      </div>
+
+      <div class="grid cols-3" style="margin-top:14px;">
+        <div class="panel">
+          <div class="panel-title"><h3>Activity Distribution</h3><span class="hint">last 60 min</span></div>
+          <canvas id="chartDist" height="150"></canvas>
+        </div>
+        <div class="panel">
+          <div class="panel-title"><h3>Events Over Time</h3><span class="hint">per minute</span></div>
+          <canvas id="chartEvents" height="150"></canvas>
+        </div>
+        <div class="panel">
+          <div class="panel-title"><h3>Alerts by Severity</h3><span class="hint" id="alertTotalHint">0 total</span></div>
+          <canvas id="chartSeverity" height="150"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= ALERTS ======================= -->
+    <section class="view" id="view-alerts">
+      <div class="view-head">
+        <div><h1>Alerts</h1><p>Fall, posture and inactivity events, tracked through their full lifecycle.</p></div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn">Configure Channels</button>
+          <button class="btn primary">Acknowledge All</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div id="alertList"></div>
+      </div>
+    </section>
+
+    <!-- ======================= HISTORY ======================= -->
+    <section class="view" id="view-history">
+      <div class="view-head">
+        <div><h1>Activity History</h1><p>Per-person activity timeline with evidence and export.</p></div>
+        <button class="btn primary" id="exportCsv">↓ Export CSV</button>
+      </div>
+
+      <div class="panel">
+        <div class="filters">
+          <div>
+            <label>Activity Type</label>
+            <select id="filterActivity">
+              <option value="all">All activities</option>
+              <option>Standing</option><option>Walking</option><option>Sitting</option>
+              <option>Bending</option><option>Hand Raised</option><option>Fallen</option><option>Waving</option>
+            </select>
+          </div>
+          <div>
+            <label>Person ID</label>
+            <select id="filterPerson"><option value="all">All people</option></select>
+          </div>
+          <div>
+            <label>Date</label>
+            <input type="date" id="filterDate">
+          </div>
+          <div>
+            <label>Status</label>
+            <select id="filterStatus"><option value="all">All</option><option>Alert-linked</option><option>Routine</option></select>
+          </div>
+          <div style="align-self:flex-end;"><button class="btn" id="clearFilters">Clear</button></div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th><th>Person</th><th>Activity</th><th>Duration</th><th>Confidence</th><th>Source</th><th>Evidence</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="historyBody"></tbody>
+        </table>
+        <div class="table-foot">
+          <span class="hint" style="font-family:var(--mono); font-size:10.5px; color:var(--text-faint);" id="historyCount">0 records</span>
+          <div style="display:flex; gap:6px;">
+            <button class="btn small">‹ Prev</button>
+            <button class="btn small">Next ›</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= ANALYTICS ======================= -->
+    <section class="view" id="view-analytics">
+      <div class="view-head">
+        <div><h1>Analytics</h1><p>Recognition quality and pipeline performance, evaluated per activity class.</p></div>
+      </div>
+
+      <div class="grid cols-2" style="margin-bottom:14px;">
+        <div class="panel">
+          <div class="panel-title"><h3>Per-Class Precision / Recall / F1</h3><span class="hint">n = 412 labeled clips</span></div>
+          <table>
+            <thead><tr><th>Activity</th><th>TP</th><th>FP</th><th>FN</th><th>Precision</th><th>Recall</th><th>F1</th></tr></thead>
+            <tbody id="evalBody"></tbody>
+          </table>
+        </div>
+        <div class="panel">
+          <div class="panel-title"><h3>Pipeline Timing (ms / frame)</h3><span class="hint" id="perfFps">-- fps avg</span></div>
+          <canvas id="chartPerf" height="180"></canvas>
+        </div>
+      </div>
+
+      <div class="grid cols-3">
+        <div class="panel metric-card">
+          <div class="m-label">Fall-Detection Delay</div>
+          <div class="m-value">1.4<span style="font-size:14px;">s</span></div>
+          <div class="m-sub">avg over confirmed falls</div>
+        </div>
+        <div class="panel metric-card">
+          <div class="m-label">Duplicate Alert Rate</div>
+          <div class="m-value">3.1<span style="font-size:14px;">%</span></div>
+          <div class="m-sub down">cooldown 30s applied</div>
+        </div>
+        <div class="panel metric-card">
+          <div class="m-label">Keypoint Failure Rate</div>
+          <div class="m-value">6.8<span style="font-size:14px;">%</span></div>
+          <div class="m-sub">low light / occlusion</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= CONFIG ======================= -->
+    <section class="view" id="view-config">
+      <div class="view-head">
+        <div><h1>Configuration</h1><p>Persists to the running session. Wire to backend <span style="font-family:var(--mono); color:var(--text-dim);">POST /api/config</span> to persist across restarts.</p></div>
+      </div>
+
+      <div class="prototype-note">⚠ PROTOTYPE — thresholds below are for demonstration and fellowship evaluation only. Not a certified safety, medical, or ergonomic assessment tool.</div>
+
+      <div class="panel">
+        <div class="cfg-grid">
+          <div>
+            <div class="field">
+              <label>Pose Model</label>
+              <select id="cfgModel">
+                <option>YOLOv8 Pose (yolov8n-pose)</option>
+                <option>YOLOv8 Pose (yolov8s-pose)</option>
+                <option>MediaPipe Pose</option>
+                <option>MoveNet Lightning</option>
+              </select>
+              <div class="desc">Model used for keypoint estimation each frame.</div>
+            </div>
+            <div class="field">
+              <label>Detection Confidence <span class="val" id="valDetConf">0.50</span></label>
+              <input type="range" id="cfgDetConf" min="0.1" max="0.9" step="0.05" value="0.5">
+            </div>
+            <div class="field">
+              <label>Keypoint Confidence <span class="val" id="valKpConf">0.35</span></label>
+              <input type="range" id="cfgKpConf" min="0.1" max="0.9" step="0.05" value="0.35">
+              <div class="desc">Keypoints below this are treated as missing and excluded from angle calculations.</div>
+            </div>
+            <div class="field">
+              <label>Pose Sequence Length <span class="val" id="valSeqLen">30 frames</span></label>
+              <input type="range" id="cfgSeqLen" min="15" max="60" step="1" value="30">
+              <div class="desc">Buffer used for velocity, stability and duration analysis. 30 frames ≈ 1s at 30fps — balances responsiveness against noise.</div>
+            </div>
+            <div class="field">
+              <label>Fall Confirmation Time <span class="val" id="valFallTime">1.2 s</span></label>
+              <input type="range" id="cfgFallTime" min="0.3" max="4" step="0.1" value="1.2">
+              <div class="desc">Time a horizontal, low-height posture must persist before Fall Confirmed.</div>
+            </div>
+            <div class="field">
+              <label>Alert Cooldown <span class="val" id="valCooldown">30 s</span></label>
+              <input type="range" id="cfgCooldown" min="5" max="120" step="5" value="30">
+            </div>
+          </div>
+          <div>
+            <div class="field">
+              <label>Video Source</label>
+              <input type="text" id="cfgSource" value="rtsp://cam01.local/stream">
+            </div>
+            <div class="field">
+              <label>Posture-Risk Duration Threshold <span class="val" id="valPosture">15 s</span></label>
+              <input type="range" id="cfgPosture" min="5" max="60" step="1" value="15">
+              <div class="desc">Sustained bending / crouching beyond this raises an ergonomic warning.</div>
+            </div>
+            <div class="field">
+              <label>Selected Activities</label>
+              <div class="chip-select" id="chipActivities">
+                <span class="chip on">Standing</span><span class="chip on">Sitting</span><span class="chip on">Walking</span>
+                <span class="chip on">Fallen</span><span class="chip on">Hand Raised</span><span class="chip on">Bending</span>
+                <span class="chip on">Waving</span><span class="chip">Phone Usage</span><span class="chip">Jumping</span>
+              </div>
+              <div class="desc">Click to toggle. Minimum five required per fellowship spec.</div>
+            </div>
+            <div class="field">
+              <label>Repetition Activity</label>
+              <select id="cfgRep"><option>Squats</option><option>Push-ups</option><option>Sit-to-stand</option><option>Jumping Jacks</option></select>
+            </div>
+            <div class="field">
+              <label>Alert Channels</label>
+              <div class="chip-select">
+                <span class="chip on">In-app</span><span class="chip on">Event Log</span>
+                <span class="chip">Telegram</span><span class="chip">Webhook</span><span class="chip">Email</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="save-bar">
+          <span class="save-note" id="saveNote">Session config — not yet saved to backend.</span>
+          <button class="btn">Reset Defaults</button>
+          <button class="btn primary" id="saveConfig">Save Configuration</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+/* ============================================================
+   SENTRY-POSE — dashboard frontend
+   Wired directly to the Flask backend (app/dashboard/routes.py):
+
+     GET  /api/live                       - status + cameras + people + alerts (polled)
+     GET  /api/events                     - activity history rows
+     GET  /api/events/export              - CSV download
+     GET  /api/events/stats               - type counts + avg durations
+     GET  /api/alerts                     - full alert list (all lifecycle states)
+     POST /api/alerts/<id>/acknowledge
+     POST /api/alerts/<id>/resolve
+     GET  /api/config   PUT /api/config
+     POST /api/pipeline/start   POST /api/pipeline/stop
+     GET  /video_feed                     - MJPEG stream (skeleton/bbox baked in server-side)
+   ============================================================ */
+
+const ACTIVITY_KEY = {
+  "Standing": "standing", "Walking": "walking", "Sitting": "sitting",
+  "Bending": "bending", "Hand Raised": "hand_raised", "Waving": "waving",
+  "Fallen / possible fall": "fallen", "Fallen": "fallen", "Unknown": "standing",
+};
+const ALERT_TYPE_LABEL = {
+  fall_detected: "Fall Detected",
+  posture_risk_bending: "Unsafe Posture (Bending)",
+  posture_risk_crouching: "Unsafe Posture (Crouching)",
+  long_inactivity: "Prolonged Inactivity",
+};
+const ALERT_STATUS_LABEL = { active: "Alert Active", acknowledged: "Acknowledged", resolved: "Resolved" };
+const ALERT_STATUS_CLASS = { active: "active", acknowledged: "acknowledged", resolved: "resolved" };
+
+let state = {
+  isRunning: false,
+  people: [],              // trackedEntities from /api/live
+  alerts: [],              // full list from /api/alerts
+  history: [],             // rows from /api/events
+  typeCounts: {},
+  eventsPerMinute: new Array(20).fill(0),
+  totals: { total: 0, falls: 0, posture: 0, reps: 0 },
+  startTime: Date.now(),
+};
+
+function pad(n){ return n.toString().padStart(2,"0"); }
+function fmtClock(ms){ const s=Math.max(0,Math.floor(ms/1000)); return `${pad(Math.floor(s/3600))}:${pad(Math.floor(s/60)%60)}:${pad(s%60)}`; }
+function fmtTime(epochSeconds){ if(!epochSeconds) return "--"; return new Date(epochSeconds*1000).toLocaleTimeString(); }
+
+async function api(path, opts){
+  const res = await fetch(path, opts);
+  if(!res.ok) throw new Error(path + " -> " + res.status);
+  const ct = res.headers.get("content-type") || "";
+  return ct.includes("application/json") ? res.json() : res.text();
+}
+
+/* ---------- nav ---------- */
+document.querySelectorAll(".nav-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("view-"+btn.dataset.view).classList.add("active");
+    if(btn.dataset.view === "alerts") loadAlerts();
+    if(btn.dataset.view === "history") { populatePersonFilterFromPeople(); loadHistory(); }
+    if(btn.dataset.view === "analytics") loadEventStats();
+    if(btn.dataset.view === "config") loadConfig();
+  });
+});
+
+/* ---------- pipeline start/stop ---------- */
+document.getElementById("btnStart").addEventListener("click", async ()=>{
+  const source = document.getElementById("sourceInput").value.trim() || "0";
+  document.getElementById("pipelineErrorNote").textContent = "Starting…";
+  try{
+    const r = await api("/api/pipeline/start?source=" + encodeURIComponent(source), { method:"POST" });
+    document.getElementById("pipelineErrorNote").textContent = r.success ? "" : ("Failed to start: " + (r.error || "unknown error"));
+  }catch(e){
+    document.getElementById("pipelineErrorNote").textContent = "Failed to start: " + e.message;
+  }
+  refreshLive();
+});
+document.getElementById("btnStop").addEventListener("click", async ()=>{
+  try{ await api("/api/pipeline/stop", { method:"POST" }); }catch(e){}
+  document.getElementById("pipelineErrorNote").textContent = "";
+  refreshLive();
+});
+/* ---------- video upload ---------- */
+document.getElementById("btnUploadVideo").addEventListener("click", ()=>{
+  document.getElementById("videoFileInput").click();
+});
+document.getElementById("videoFileInput").addEventListener("change", async (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const statusEl = document.getElementById("uploadStatusNote");
+  const trackEl = document.getElementById("uploadProgressTrack");
+  const fillEl = document.getElementById("uploadProgressFill");
+
+  statusEl.style.color = "var(--text-dim)";
+  statusEl.textContent = `Uploading ${file.name} (${(file.size/1024/1024).toFixed(1)} MB)…`;
+  trackEl.style.display = "block";
+  fillEl.style.width = "0%";
+
+  try{
+    const result = await new Promise((resolve, reject)=>{
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "/api/upload");
+      xhr.upload.addEventListener("progress", (ev)=>{
+        if(ev.lengthComputable){
+          fillEl.style.width = Math.round((ev.loaded/ev.total)*100) + "%";
+        }
+      });
+      xhr.onload = ()=>{
+        try{ resolve(JSON.parse(xhr.responseText)); }
+        catch(err){ reject(new Error("Bad response from server")); }
+      };
+      xhr.onerror = ()=> reject(new Error("Network error during upload"));
+      const fd = new FormData();
+      fd.append("video", file);
+      xhr.send(fd);
+    });
+
+    if(!result.success){
+      throw new Error(result.error || "Upload failed");
+    }
+
+    document.getElementById("sourceInput").value = result.path;
+    statusEl.style.color = "var(--accent)";
+    statusEl.textContent = `✓ Uploaded "${result.filename}" — press Start to analyze it`;
+  }catch(err){
+    statusEl.style.color = "var(--danger)";
+    statusEl.textContent = "Upload failed: " + err.message;
+  }finally{
+    trackEl.style.display = "none";
+    e.target.value = "";
+  }
+});
+
+document.getElementById("btnSnapshot").addEventListener("click", ()=>{
+  const img = document.getElementById("feedImg");
+  if(!img || img.style.display === "none" || !img.naturalWidth){ return; }
+  const cv = document.createElement("canvas");
+  cv.width = img.naturalWidth; cv.height = img.naturalHeight;
+  cv.getContext("2d").drawImage(img, 0, 0);
+  cv.toBlob(blob=>{
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = "sentry_pose_snapshot.jpg"; a.click();
+    URL.revokeObjectURL(url);
+  }, "image/jpeg", 0.92);
+});
+
+/* ---------- live monitor: /api/live polling ---------- */
+function applyLive(data){
+  const status = data.status || {};
+  const cameras = data.cameras || [];
+  const cam = cameras[0];
+  state.isRunning = !!status.isRunning;
+  state.people = data.trackedEntities || [];
+  state.totals.total = status.totalActivities || 0;
+  state.totals.falls = status.totalFalls || 0;
+  state.totals.posture = status.totalPostureRisks || 0;
+  state.totals.reps = status.totalReps || 0;
+
+  // top stat strip
+  document.getElementById("statFps").textContent = status.isRunning ? Math.round(status.fps) : "--";
+  document.getElementById("statPeople").textContent = status.activePeople || 0;
+  document.getElementById("statLatency").textContent = status.isRunning ? Math.round(status.inferenceTimeMs) : "--";
+  document.getElementById("statTracked").textContent = state.totals.total;
+  document.getElementById("statAlerts").textContent = (data.alerts || []).length;
+  document.getElementById("navAlertBadge").textContent = (data.alerts || []).length;
+
+  // live pill + feed frame
+  const dot = document.querySelector(".live-dot");
+  const pill = document.querySelector(".live-pill");
+  const img = document.getElementById("feedImg");
+  const offline = document.getElementById("feedOffline");
+  if(status.isRunning){
+    pill.lastChild.textContent = " LIVE · " + (cam ? cam.name : "CAM_01") + " · yolov8n-pose";
+    if(dot) dot.style.background = "var(--accent)";
+    if(img.style.display === "none"){ img.src = "/video_feed?t=" + Date.now(); img.style.display = "block"; }
+    offline.style.display = "none";
+    document.getElementById("feedDet").textContent = "detections: " + (status.activePeople || 0);
+    document.getElementById("feedFrameNo").textContent = "frame #" + (status.frameNumber || 0);
+  } else {
+    pill.lastChild.textContent = " OFFLINE · pipeline not running";
+    if(dot) dot.style.background = "var(--text-faint)";
+    img.style.display = "none"; img.removeAttribute("src");
+    offline.style.display = "flex";
+    document.getElementById("feedOfflineNote").textContent = status.error
+      ? ("Last error: " + status.error)
+      : "Set a source below and press Start to begin streaming.";
+    document.getElementById("feedDet").textContent = "detections: 0";
+    document.getElementById("feedFrameNo").textContent = "frame #0";
+  }
+
+  // metric cards
+  document.getElementById("mTotal").textContent = state.totals.total;
+  document.getElementById("mFalls").textContent = state.totals.falls;
+  document.getElementById("mFallsSub").textContent = state.totals.falls + " today";
+  document.getElementById("mPosture").textContent = state.totals.posture;
+  document.getElementById("mReps").textContent = state.totals.reps;
+
+  renderPeople();
+  renderAlertsPreview(data.alerts || []);
+}
+
+function renderPeople(){
+  const el = document.getElementById("peopleList");
+  el.innerHTML = "";
+  state.people.forEach(p=>{
+    const key = ACTIVITY_KEY[p.posture] || "standing";
+    const [mm, ss] = (p.duration || "00:00s").replace("s","").split(":");
+    const row = document.createElement("div");
+    row.className = "person-row";
+    row.innerHTML = `
+      <span class="person-id">${p.id}</span>
+      <svg class="avatar-skel" viewBox="0 0 24 24" fill="none" stroke="var(--text-dim)" stroke-width="1.4">
+        <circle cx="12" cy="5" r="2"/><path d="M12 7v6M12 9l-4 3M12 9l4 3M12 13l-3 5M12 13l3 5"/>
+      </svg>
+      <div class="person-activity">
+        <b>${p.posture}</b>
+        <span>for ${p.duration}</span>
+      </div>
+      <div class="conf-bar"><i style="width:${(p.confidence*100).toFixed(0)}%; background:${p.isAlarm?'var(--danger)':'var(--accent)'}"></i></div>
+      <span class="badge ${key}">${(p.confidence*100).toFixed(0)}%</span>
+    `;
+    el.appendChild(row);
+  });
+  document.getElementById("peopleCountHint").textContent = state.people.length + " active";
+  if(state.people.length === 0){
+    el.innerHTML = '<div style="color:var(--text-faint); font-size:11.5px; padding:8px 2px;">No people currently tracked.</div>';
+  }
+}
+
+/* small alert preview used to refresh charts on the live view without a full /api/alerts fetch */
+let lastActiveAlerts = [];
+function renderAlertsPreview(activeAlerts){
+  lastActiveAlerts = activeAlerts;
+}
+
+/* ---------- charts (canvas, no deps) ---------- */
+function drawBar(canvasId, labels, values, color){
+  const cv = document.getElementById(canvasId);
+  const ctx = cv.getContext("2d");
+  const w = cv.clientWidth, h = cv.height;
+  cv.width = w * devicePixelRatio; cv.height = h * devicePixelRatio;
+  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  ctx.clearRect(0,0,w,h);
+  const max = Math.max(...values, 1);
+  const pad = 22, barW = labels.length ? (w - pad*2) / labels.length : 0;
+  labels.forEach((l,i)=>{
+    const bh = (values[i]/max) * (h - 34);
+    const x = pad + i*barW + barW*0.18;
+    const bw = barW*0.64;
+    const y = h - 20 - bh;
+    ctx.fillStyle = color;
+    ctx.globalAlpha = 0.85;
+    ctx.beginPath();
+    ctx.roundRect ? ctx.roundRect(x,y,bw,bh,2) : ctx.rect(x,y,bw,bh);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "#7fa695";
+    ctx.font = "9px 'JetBrains Mono', monospace";
+    ctx.textAlign = "center";
+    ctx.fillText(l.slice(0,4), x+bw/2, h-7);
+    ctx.fillStyle = "#dcf3e6";
+    if(values[i]>0) ctx.fillText(values[i], x+bw/2, y-4);
+  });
+}
+
+function drawLine(canvasId, values, color){
+  const cv = document.getElementById(canvasId);
+  const ctx = cv.getContext("2d");
+  const w = cv.clientWidth, h = cv.height;
+  cv.width = w * devicePixelRatio; cv.height = h * devicePixelRatio;
+  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  ctx.clearRect(0,0,w,h);
+  const max = Math.max(...values, 1);
+  const pad = 10;
+  const stepX = (w - pad*2) / (values.length-1);
+  ctx.beginPath();
+  values.forEach((v,i)=>{
+    const x = pad + i*stepX, y = h - 16 - (v/max)*(h-30);
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle = color; ctx.lineWidth = 1.8; ctx.stroke();
+  const grad = ctx.createLinearGradient(0,0,0,h);
+  grad.addColorStop(0, color+"33"); grad.addColorStop(1, color+"00");
+  ctx.lineTo(pad+(values.length-1)*stepX, h-16); ctx.lineTo(pad,h-16); ctx.closePath();
+  ctx.fillStyle = grad; ctx.fill();
+}
+
+function drawDonut(canvasId, segments){
+  const cv = document.getElementById(canvasId);
+  const ctx = cv.getContext("2d");
+  const w = cv.clientWidth, h = cv.height;
+  cv.width = w * devicePixelRatio; cv.height = h * devicePixelRatio;
+  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  ctx.clearRect(0,0,w,h);
+  const total = segments.reduce((s,x)=>s+x.value,0) || 1;
+  const cx = w*0.32, cy = h/2, r = Math.min(w*0.28, h/2 - 6), rw = r*0.42;
+  let start = -Math.PI/2;
+  segments.forEach(seg=>{
+    const angle = (seg.value/total) * Math.PI*2;
+    ctx.beginPath();
+    ctx.arc(cx,cy,r,start,start+angle);
+    ctx.arc(cx,cy,r-rw,start+angle,start,true);
+    ctx.closePath();
+    ctx.fillStyle = seg.color;
+    ctx.fill();
+    start += angle;
+  });
+  ctx.fillStyle = "#dcf3e6"; ctx.font="600 15px 'JetBrains Mono'"; ctx.textAlign="center";
+  ctx.fillText(total, cx, cy+5);
+  let ly = cy - segments.length*8 + 6;
+  segments.forEach(seg=>{
+    ctx.fillStyle = seg.color; ctx.fillRect(w*0.62, ly-8, 8, 8);
+    ctx.fillStyle = "#7fa695"; ctx.font="10px Inter"; ctx.textAlign="left";
+    ctx.fillText(`${seg.label} (${seg.value})`, w*0.62+13, ly);
+    ly += 17;
+  });
+}
+
+function drawMultiLine(canvasId, series){
+  const cv = document.getElementById(canvasId);
+  const ctx = cv.getContext("2d");
+  const w = cv.clientWidth, h = cv.height;
+  cv.width = w*devicePixelRatio; cv.height = h*devicePixelRatio;
+  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  ctx.clearRect(0,0,w,h);
+  const allVals = series.flatMap(s=>s.values);
+  const max = Math.max(...allVals,1);
+  const pad = 12;
+  series.forEach(s=>{
+    const stepX = (w-pad*2)/(s.values.length-1);
+    ctx.beginPath();
+    s.values.forEach((v,i)=>{
+      const x = pad+i*stepX, y = h-18-(v/max)*(h-30);
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.strokeStyle = s.color; ctx.lineWidth = 1.6; ctx.stroke();
+  });
+  let lx = pad;
+  series.forEach(s=>{
+    ctx.fillStyle = s.color; ctx.fillRect(lx, h-10, 7,7);
+    ctx.fillStyle = "#7fa695"; ctx.font = "9px Inter"; ctx.textAlign="left";
+    ctx.fillText(s.label, lx+10, h-3);
+    lx += 10 + ctx.measureText(s.label).width + 14;
+  });
+}
+
+/* ---------- activity distribution / events-per-minute / severity donut ---------- */
+async function loadEventStats(){
+  try{
+    const stats = await api("/api/events/stats");
+    state.typeCounts = stats.typeCounts || {};
+  }catch(e){ state.typeCounts = {}; }
+  renderDistChart();
+  renderPerf();
+}
+
+function renderDistChart(){
+  const labels = Object.keys(state.typeCounts);
+  const values = Object.values(state.typeCounts);
+  drawBar("chartDist", labels.length ? labels : ["No data"], labels.length ? values : [0], "#37ffa0");
+}
+
+async function refreshEventsPerMinute(){
+  try{
+    const rows = await api("/api/events?limit=300");
+    const now = Date.now()/1000;
+    const buckets = new Array(20).fill(0);
+    rows.forEach(r=>{
+      const t = r.start_time;
+      if(!t) return;
+      const minsAgo = Math.floor((now - t) / 60);
+      const idx = 19 - minsAgo;
+      if(idx >= 0 && idx < 20) buckets[idx]++;
+    });
+    state.eventsPerMinute = buckets;
+  }catch(e){ /* leave previous */ }
+  drawLine("chartEvents", state.eventsPerMinute, "#5fb7ff");
+}
+
+function renderSeverityDonut(alerts){
+  const notResolved = alerts.filter(a=>a.status!=="resolved");
+  const bySeverity = [
+    { label:"Critical", value: notResolved.filter(a=>a.severity==="CRITICAL").length, color:"#ff5468" },
+    { label:"Warning", value: notResolved.filter(a=>a.severity!=="CRITICAL").length, color:"#ffb454" },
+    { label:"Resolved", value: alerts.filter(a=>a.status==="resolved").length, color:"#37ffa0" },
+  ];
+  drawDonut("chartSeverity", bySeverity);
+  document.getElementById("alertTotalHint").textContent = alerts.length + " total";
+}
+
+function renderPerf(){
+  // Pipeline stage timing isn't broken down per-stage by the backend today;
+  // show overall inference time as a flat reference line instead of fabricating stage splits.
+  const cv = document.getElementById("chartPerf");
+  const ctx = cv.getContext("2d");
+  const w = cv.clientWidth, h = cv.height;
+  cv.width = w*devicePixelRatio; cv.height = h*devicePixelRatio;
+  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle = "#7fa695"; ctx.font = "11px Inter"; ctx.textAlign = "center";
+  ctx.fillText("Per-stage timing breakdown not exposed by the backend yet.", w/2, h/2 - 6);
+  ctx.fillText("See /api/status → inferenceTimeMs for overall frame time.", w/2, h/2 + 12);
+  document.getElementById("perfFps").textContent = state.isRunning ? (document.getElementById("statFps").textContent + " fps") : "-- fps";
+}
+
+/* ---------- evaluation table (static, from offline model evaluation) ---------- */
+const evalRows = [
+  ["Standing",112,4,3],["Walking",98,6,5],["Sitting",76,3,4],
+  ["Bending",41,5,6],["Hand Raised",33,2,3],["Fallen",18,1,2],["Waving",22,3,2],
+];
+function renderEval(){
+  const body = document.getElementById("evalBody");
+  body.innerHTML = evalRows.map(([name,tp,fp,fn])=>{
+    const prec = tp/(tp+fp), rec = tp/(tp+fn), f1 = 2*prec*rec/(prec+rec);
+    return `<tr><td><b>${name}</b></td><td class="mono-cell">${tp}</td><td class="mono-cell">${fp}</td><td class="mono-cell">${fn}</td>
+      <td class="mono-cell">${(prec*100).toFixed(1)}%</td><td class="mono-cell">${(rec*100).toFixed(1)}%</td><td class="mono-cell">${(f1*100).toFixed(1)}%</td></tr>`;
+  }).join("");
+}
+renderEval();
+
+/* ---------- alerts view ---------- */
+async function loadAlerts(){
+  try{
+    state.alerts = await api("/api/alerts?limit=200");
+  }catch(e){ state.alerts = []; }
+  renderAlerts();
+  renderSeverityDonut(state.alerts);
+}
+
+function statusClass(s){ return ALERT_STATUS_CLASS[s] || "possible"; }
+function renderAlerts(){
+  const el = document.getElementById("alertList");
+  el.innerHTML = "";
+  if(state.alerts.length === 0){
+    el.innerHTML = '<div style="color:var(--text-faint); font-size:11.5px; padding:8px 2px;">No alerts recorded yet.</div>';
+    return;
+  }
+  state.alerts.forEach(a=>{
+    const sev = a.status === "resolved" ? "resolved" : (a.severity === "CRITICAL" ? "crit" : "warn");
+    const typeLabel = ALERT_TYPE_LABEL[a.alert_type] || a.alert_type;
+    const statusLabel = ALERT_STATUS_LABEL[a.status] || a.status;
+    const item = document.createElement("div");
+    item.className = "alert-item " + sev;
+    item.innerHTML = `
+      <div class="alert-thumb">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 17l5-9 4 6 3-4 4 7"/></svg>
+      </div>
+      <div class="alert-body">
+        <div class="top"><b>${typeLabel}</b><span class="status-chip ${statusClass(a.status)}">${statusLabel}</span></div>
+        <div class="meta">${a.alert_id} · #${String(a.person_id).padStart(3,'0')} · ${fmtTime(a.timestamp)} · conf ${((a.confidence||0)*100).toFixed(0)}% · ${a.camera_source || 'CAM-01'}</div>
+      </div>
+      <div class="alert-actions">
+        ${a.status === "active" ? `<button class="btn small" data-ack="${a.alert_id}">Acknowledge</button>` : ""}
+        ${a.status !== "resolved" ? `<button class="btn small primary" data-res="${a.alert_id}">Resolve</button>` : ""}
+        ${a.evidence_path ? `<a class="btn small" href="/evidence/${encodeURIComponent(a.evidence_path.split('/').pop())}" target="_blank">Evidence</a>` : `<button class="btn small" disabled>Evidence</button>`}
+      </div>
+    `;
+    el.appendChild(item);
+  });
+  el.querySelectorAll("[data-ack]").forEach(b=>b.addEventListener("click", async e=>{
+    await api(`/api/alerts/${e.target.dataset.ack}/acknowledge`, { method:"POST" });
+    loadAlerts();
+  }));
+  el.querySelectorAll("[data-res]").forEach(b=>b.addEventListener("click", async e=>{
+    await api(`/api/alerts/${e.target.dataset.res}/resolve`, { method:"POST" });
+    loadAlerts();
+  }));
+}
+
+/* ---------- history view ---------- */
+function populatePersonFilterFromPeople(){
+  const sel = document.getElementById("filterPerson");
+  const existing = new Set(Array.from(sel.options).map(o=>o.value));
+  state.people.forEach(p=>{
+    if(!existing.has(p.id)){
+      const o = document.createElement("option"); o.value = p.id; o.textContent = p.id; sel.appendChild(o);
+    }
+  });
+}
+
+async function loadHistory(){
+  const actF = document.getElementById("filterActivity").value;
+  const perF = document.getElementById("filterPerson").value;
+  const dateF = document.getElementById("filterDate").value;
+  const statF = document.getElementById("filterStatus").value;
+
+  const params = new URLSearchParams({ limit: "200" });
+  if(actF !== "all") params.set("activity_type", ACTIVITY_KEY[actF] || actF.toLowerCase());
+  if(perF !== "all") params.set("person_id", perF.replace(/\D/g,""));
+
+  let rows = [];
+  try{ rows = await api("/api/events?" + params.toString()); }catch(e){ rows = []; }
+
+  if(dateF){
+    rows = rows.filter(r=>{
+      if(!r.start_time) return false;
+      const d = new Date(r.start_time*1000).toISOString().slice(0,10);
+      return d === dateF;
+    });
+  }
+  if(statF === "Alert-linked") rows = rows.filter(r=>r.alert_status && r.alert_status !== "none");
+  if(statF === "Routine") rows = rows.filter(r=>!r.alert_status || r.alert_status === "none");
+
+  state.history = rows;
+  const body = document.getElementById("historyBody");
+  body.innerHTML = rows.map(r=>{
+    const badgeKey = ACTIVITY_KEY[r.activity_type] || r.activity_type;
+    const linked = r.alert_status && r.alert_status !== "none";
+    return `<tr>
+      <td class="mono-cell">${fmtTime(r.start_time)}</td>
+      <td><b>#${String(r.person_id).padStart(3,'0')}</b></td>
+      <td><span class="badge ${badgeKey}">${r.activity_type}</span></td>
+      <td class="mono-cell">${r.duration ? Math.round(r.duration) + 's' : '--'}</td>
+      <td class="mono-cell">${((r.confidence||0)*100).toFixed(0)}%</td>
+      <td>${r.source_id || 'CAM-01'}</td>
+      <td>${r.evidence_path ? `<a href="/evidence/${encodeURIComponent(r.evidence_path.split('/').pop())}" target="_blank" style="color:var(--accent);">● capture</a>` : '<span style="color:var(--text-faint);">—</span>'}</td>
+      <td>${linked ? '<span class="status-chip confirmed">Alert</span>' : '<span class="status-chip resolved">Routine</span>'}</td>
+    </tr>`;
+  }).join("");
+  document.getElementById("historyCount").textContent = rows.length + " records";
+}
+["filterActivity","filterPerson","filterDate","filterStatus"].forEach(id=>{
+  document.getElementById(id).addEventListener("change", loadHistory);
+});
+document.getElementById("clearFilters").addEventListener("click", ()=>{
+  document.getElementById("filterActivity").value="all";
+  document.getElementById("filterPerson").value="all";
+  document.getElementById("filterDate").value="";
+  document.getElementById("filterStatus").value="all";
+  loadHistory();
+});
+document.getElementById("exportCsv").addEventListener("click", ()=>{
+  window.location.href = "/api/events/export";
+});
+
+/* ---------- config view ---------- */
+const POSE_MODEL_MAP = {
+  "YOLOv8 Pose (yolov8n-pose)": "yolov8n-pose.pt",
+  "YOLOv8 Pose (yolov8s-pose)": "yolov8s-pose.pt",
+  "MediaPipe Pose": "mediapipe-pose",
+  "MoveNet Lightning": "movenet-lightning",
+};
+function poseModelToOption(modelStr){
+  for(const [label, val] of Object.entries(POSE_MODEL_MAP)) if(val === modelStr) return label;
+  return "YOLOv8 Pose (yolov8n-pose)";
+}
+async function loadConfig(){
+  let c;
+  try{ c = await api("/api/config"); }catch(e){ return; }
+  document.getElementById("cfgModel").value = poseModelToOption(c.poseModel);
+  document.getElementById("cfgDetConf").value = c.detectionThreshold;
+  document.getElementById("valDetConf").textContent = c.detectionThreshold.toFixed(2);
+  document.getElementById("cfgKpConf").value = c.keypointThreshold;
+  document.getElementById("valKpConf").textContent = c.keypointThreshold.toFixed(2);
+  document.getElementById("cfgSeqLen").value = c.sequenceLength;
+  document.getElementById("valSeqLen").textContent = c.sequenceLength + " frames";
+  const fallSeconds = (c.fallConfirmFrames / (c.fpsTarget || 30));
+  document.getElementById("cfgFallTime").value = fallSeconds.toFixed(1);
+  document.getElementById("valFallTime").textContent = fallSeconds.toFixed(1) + " s";
+  document.getElementById("cfgCooldown").value = c.alertCooldownSeconds;
+  document.getElementById("valCooldown").textContent = c.alertCooldownSeconds + " s";
+  document.getElementById("cfgSource").value = c.videoSource;
+  document.getElementById("cfgPosture").value = c.inactivityWarnSeconds;
+  document.getElementById("valPosture").textContent = c.inactivityWarnSeconds + " s";
+  document.getElementById("saveNote").textContent = "Loaded from backend.";
+  if(!document.getElementById("sourceInput").value) document.getElementById("sourceInput").value = c.videoSource;
+}
+function bindRange(id, valId, fmt){
+  const input = document.getElementById(id), out = document.getElementById(valId);
+  input.addEventListener("input", ()=>{ out.textContent = fmt(input.value); document.getElementById("saveNote").textContent = "Unsaved changes."; });
+}
+bindRange("cfgDetConf","valDetConf", v=>parseFloat(v).toFixed(2));
+bindRange("cfgKpConf","valKpConf", v=>parseFloat(v).toFixed(2));
+bindRange("cfgSeqLen","valSeqLen", v=>v+" frames");
+bindRange("cfgFallTime","valFallTime", v=>parseFloat(v).toFixed(1)+" s");
+bindRange("cfgCooldown","valCooldown", v=>v+" s");
+bindRange("cfgPosture","valPosture", v=>v+" s");
+document.querySelectorAll("#chipActivities .chip").forEach(c=>c.addEventListener("click", ()=>{
+  c.classList.toggle("on"); document.getElementById("saveNote").textContent = "Unsaved changes.";
+}));
+document.getElementById("saveConfig").addEventListener("click", async ()=>{
+  const fpsTarget = 30;
+  const payload = {
+    poseModel: POSE_MODEL_MAP[document.getElementById("cfgModel").value] || "yolov8n-pose.pt",
+    detectionThreshold: parseFloat(document.getElementById("cfgDetConf").value),
+    keypointThreshold: parseFloat(document.getElementById("cfgKpConf").value),
+    sequenceLength: parseInt(document.getElementById("cfgSeqLen").value, 10),
+    fallConfirmFrames: Math.round(parseFloat(document.getElementById("cfgFallTime").value) * fpsTarget),
+    alertCooldownSeconds: parseInt(document.getElementById("cfgCooldown").value, 10),
+    inactivityWarnSeconds: parseInt(document.getElementById("cfgPosture").value, 10),
+    videoSource: document.getElementById("cfgSource").value,
+  };
+  try{
+    await api("/api/config", { method:"PUT", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload) });
+    document.getElementById("saveNote").textContent = "Saved to backend at " + new Date().toLocaleTimeString() + ".";
+  }catch(e){
+    document.getElementById("saveNote").textContent = "Save failed: " + e.message;
+  }
+});
+
+/* ---------- clocks ---------- */
+setInterval(()=>{
+  document.getElementById("sessionClock").textContent = fmtClock(Date.now()-state.startTime);
+  document.getElementById("feedClock").textContent = new Date().toLocaleTimeString();
+},1000);
+
+/* ---------- live polling loop ---------- */
+async function refreshLive(){
+  try{
+    const data = await api("/api/live");
+    applyLive(data);
+  }catch(e){
+    document.getElementById("pipelineErrorNote").textContent = "Backend unreachable: " + e.message;
+  }
+}
+
+/* ---------- init ---------- */
+loadConfig();
+refreshLive();
+loadEventStats();
+refreshEventsPerMinute();
+loadAlerts();
+renderPerf();
+
+setInterval(refreshLive, 1000);
+setInterval(loadEventStats, 6000);
+setInterval(refreshEventsPerMinute, 8000);
+setInterval(()=>{ if(document.getElementById("view-alerts").classList.contains("active")) loadAlerts(); }, 5000);
+window.addEventListener("resize", ()=>{ renderDistChart(); renderPerf(); });
+</script>
+
