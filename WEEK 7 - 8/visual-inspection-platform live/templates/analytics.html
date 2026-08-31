@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Analytics{% endblock %}
+{% block eyebrow %}Quality dashboard{% endblock %}
+{% block heading %}Analytics{% endblock %}
+
+{% block content %}
+<div class="grid-4" id="stat-cards">
+  <div class="stat-card"><div class="stat-card__label">Total inspections</div><div class="stat-card__value" id="a-total">&mdash;</div></div>
+  <div class="stat-card"><div class="stat-card__label">Pass rate</div><div class="stat-card__value" id="a-pass-rate">&mdash;</div></div>
+  <div class="stat-card"><div class="stat-card__label">Defect rate</div><div class="stat-card__value" id="a-defect-rate">&mdash;</div></div>
+  <div class="stat-card"><div class="stat-card__label">Invalid rate</div><div class="stat-card__value" id="a-invalid-rate">&mdash;</div></div>
+</div>
+
+<div class="grid-2" style="margin-top:20px;">
+  <section class="panel">
+    <h2 class="panel__title">Defects by category</h2>
+    <p class="panel__subtitle">Counts across all recorded inspections.</p>
+    <canvas id="chart-defects" height="200"></canvas>
+  </section>
+
+  <section class="panel">
+    <h2 class="panel__title">Defect rate over time</h2>
+    <p class="panel__subtitle">Failed inspections as a share of daily volume.</p>
+    <canvas id="chart-timeseries" height="200"></canvas>
+  </section>
+</div>
+
+<div class="grid-2" style="margin-top:20px;">
+  <section class="panel">
+    <h2 class="panel__title">Severity distribution</h2>
+    <p class="panel__subtitle">Among failed inspections.</p>
+    <canvas id="chart-severity" height="180"></canvas>
+  </section>
+
+  <section class="panel">
+    <h2 class="panel__title">System metrics</h2>
+    <p class="panel__subtitle">Live from the inspection database.</p>
+    <div class="readout">
+      <div class="readout-row"><span class="readout-row__label">Avg. processing time</span><span class="readout-row__value" id="a-latency">&mdash;</span></div>
+      <div class="readout-row"><span class="readout-row__label">Est. throughput</span><span class="readout-row__value" id="a-throughput">&mdash;</span></div>
+      <div class="readout-row"><span class="readout-row__label">Model version</span><span class="readout-row__value">classifier_v1 + anomaly_v1</span></div>
+      <div class="readout-row"><span class="readout-row__label">Passed</span><span class="readout-row__value" id="a-passed">&mdash;</span></div>
+      <div class="readout-row"><span class="readout-row__label">Failed</span><span class="readout-row__value" id="a-failed">&mdash;</span></div>
+      <div class="readout-row"><span class="readout-row__label">Invalid</span><span class="readout-row__value" id="a-invalid">&mdash;</span></div>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
+{% endblock %}

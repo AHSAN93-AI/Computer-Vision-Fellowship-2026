@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% block eyebrow %}Configuration{% endblock %}
+{% block heading %}Thresholds{% endblock %}
+
+{% block content %}
+<div class="grid-2">
+  <section class="panel">
+    <h2 class="panel__title">Decision engine</h2>
+    <p class="panel__subtitle">Controls what makes an inspection FAIL. Changes apply immediately.</p>
+
+    <div class="slider-field">
+      <div class="slider-field__head"><span class="slider-field__name">Classifier confidence threshold</span><span class="slider-field__value" id="v-conf">0.50</span></div>
+      <input type="range" id="s-conf" min="0" max="1" step="0.01" value="0.5">
+      <div class="slider-field__hint">Classifier votes below this confidence are ignored.</div>
+    </div>
+
+    <div class="slider-field">
+      <div class="slider-field__head"><span class="slider-field__name">Anomaly score threshold</span><span class="slider-field__value" id="v-anomaly">0.62</span></div>
+      <input type="range" id="s-anomaly" min="0" max="1" step="0.01" value="0.62">
+      <div class="slider-field__hint">Reconstruction error at or above this is flagged anomalous.</div>
+    </div>
+
+    <div class="slider-field">
+      <div class="slider-field__head"><span class="slider-field__name">Max allowed defect count</span><span class="slider-field__value" id="v-count">0</span></div>
+      <input type="range" id="s-count" min="0" max="5" step="1" value="0">
+      <div class="slider-field__hint">Number of confirmed defects a part may have and still PASS.</div>
+    </div>
+
+    <div class="slider-field">
+      <div class="slider-field__head"><span class="slider-field__name">Max allowed defect area ratio</span><span class="slider-field__value" id="v-area">0.02</span></div>
+      <input type="range" id="s-area" min="0" max="0.3" step="0.005" value="0.02">
+      <div class="slider-field__hint">Fraction of the product's surface that may be anomalous.</div>
+    </div>
+
+    <div class="field">
+      <label>Critical defect classes (always FAIL)</label>
+      <div class="chip-list" id="critical-chips">
+        <span class="chip" data-class="color">color</span>
+        <span class="chip" data-class="cut">cut</span>
+        <span class="chip" data-class="hole">hole</span>
+        <span class="chip" data-class="metal_contamination">metal_contamination</span>
+        <span class="chip" data-class="thread">thread</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2 class="panel__title">Severity bands</h2>
+    <p class="panel__subtitle">Defect area ratio bands used to classify Minor / Major / Critical.</p>
+
+    <div class="slider-field">
+      <div class="slider-field__head"><span class="slider-field__name">Minor max area ratio</span><span class="slider-field__value" id="v-minor">0.01</span></div>
+      <input type="range" id="s-minor" min="0" max="0.1" step="0.002" value="0.01">
+      <div class="slider-field__hint">At or below this area ratio, a defect rates Minor.</div>
+    </div>
+
+    <div class="slider-field">
+      <div class="slider-field__head"><span class="slider-field__name">Major max area ratio</span><span class="slider-field__value" id="v-major">0.05</span></div>
+      <input type="range" id="s-major" min="0" max="0.3" step="0.005" value="0.05">
+      <div class="slider-field__hint">Above Minor and at or below this &rarr; Major. Above this &rarr; Critical.</div>
+    </div>
+
+    <div class="field">
+      <label>Classes with a Major severity floor</label>
+      <div class="chip-list" id="floor-chips">
+        <span class="chip" data-class="hole">hole</span>
+        <span class="chip" data-class="cut">cut</span>
+        <span class="chip" data-class="metal_contamination">metal_contamination</span>
+        <span class="chip" data-class="color">color</span>
+        <span class="chip" data-class="thread">thread</span>
+      </div>
+      <div class="slider-field__hint" style="margin-top:6px;">These classes can never rate below Major, regardless of measured area.</div>
+    </div>
+
+    <div class="save-bar">
+      <button class="btn btn--ghost" id="reset-btn" type="button">Reset to defaults</button>
+      <button class="btn" id="save-btn" type="button" style="width:auto;">Save changes</button>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+{% endblock %}

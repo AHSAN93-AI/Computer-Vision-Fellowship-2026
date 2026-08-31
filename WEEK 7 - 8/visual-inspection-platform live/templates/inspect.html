@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block title %}Inspect{% endblock %}
+{% block eyebrow %}Station 01 &middot; Multi-source Feed{% endblock %}
+{% block heading %}Inspect a sample{% endblock %}
+{% block topmeta %}<span id="clock"></span>{% endblock %}
+
+{% block content %}
+<div class="line-strip">
+  <div class="line-strip__stats">
+    <div class="line-strip__stat"><span class="line-strip__stat-label">Inspected</span><span class="line-strip__stat-value" id="strip-total">&mdash;</span></div>
+    <div class="line-strip__stat"><span class="line-strip__stat-label">Pass</span><span class="line-strip__stat-value is-pass" id="strip-pass">&mdash;</span></div>
+    <div class="line-strip__stat"><span class="line-strip__stat-label">Fail</span><span class="line-strip__stat-value is-fail" id="strip-fail">&mdash;</span></div>
+    <div class="line-strip__stat"><span class="line-strip__stat-label">Invalid</span><span class="line-strip__stat-value is-invalid" id="strip-invalid">&mdash;</span></div>
+    <div class="line-strip__stat"><span class="line-strip__stat-label">Pass Rate</span><span class="line-strip__stat-value" id="strip-rate">&mdash;</span></div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <section class="panel">
+    <h2 class="panel__title">Sample upload</h2>
+    <p class="panel__subtitle">Choose an input source, then run the inspection pipeline.</p>
+
+    <div class="chip-list" id="source-tabs" style="margin-bottom:16px;">
+      <div class="chip is-active" data-source="image">Image upload</div>
+      <div class="chip" data-source="webcam">Webcam / USB camera</div>
+      <div class="chip" data-source="conveyor">Conveyor feed</div>
+      <div class="chip" data-source="video">Video upload</div>
+    </div>
+
+    <!-- ============== Source: single image ============== -->
+    <div class="source-pane" id="source-image">
+      <form id="inspect-form">
+        <div class="dropzone" id="dropzone">
+          <img id="preview-img" class="dropzone__preview" style="display:none;">
+          <div id="dropzone-empty">
+            <div class="dropzone__icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+            </div>
+            <div class="dropzone__title">Drop image or click to browse</div>
+            <div class="dropzone__hint">JPG or PNG &middot; any resolution &middot; auto-resized to model input</div>
+          </div>
+          <input type="file" id="file-input" accept="image/*" style="display:none;">
+        </div>
+        <button type="submit" class="btn" id="run-btn" style="margin-top:14px;">Run inspection</button>
+      </form>
+    </div>
+
+    <!-- ============== Source: webcam / USB industrial camera ============== -->
+    <div class="source-pane" id="source-webcam" style="display:none;">
+      <div class="field" id="webcam-device-field" style="display:none;">
+        <label for="webcam-device-select">Camera device</label>
+        <select id="webcam-device-select"></select>
+      </div>
+
+      <div class="camera-frame" id="camera-frame">
+        <video id="webcam-video" autoplay playsinline muted style="display:none;"></video>
+        <div class="camera-frame__empty" id="webcam-empty">
+          <div class="dropzone__icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+          <div class="dropzone__title">No camera connected</div>
+          <div class="dropzone__hint">Start the camera to preview a live feed. Any UVC-compatible camera &mdash; including a USB industrial camera &mdash; appears in the device list below once connected.</div>
+        </div>
+      </div>
+
+      <div class="pane-status" id="webcam-status"></div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn--ghost" id="webcam-start-btn">Start camera</button>
+        <button type="button" class="btn btn--ghost" id="webcam-stop-btn" disabled>Stop</button>
+      </div>
+      <button type="button" class="btn" id="webcam-capture-btn" disabled>Capture frame &amp; inspect</button>
+    </div>
+
+    <!-- ============== Source: recorded conveyor video (auto-inspect) ============== -->
+    <div class="source-pane" id="source-conveyor" style="display:none;">
+      <div class="dropzone" id="conveyor-input-zone">
+        <div class="dropzone__icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="5" width="14" height="14" rx="2"/><path d="M23 7l-6 5 6 5V7z"/></svg>
+        </div>
+        <div class="dropzone__title">Drop recorded conveyor footage or click to browse</div>
+        <div class="dropzone__hint">MP4/WebM &middot; simulates a fixed camera watching a moving line</div>
+        <input type="file" id="conveyor-file-input" accept="video/*" style="display:none;">
+      </div>
+      <video id="conveyor-video" style="display:none;" controls loop muted playsinline></video>
+      <div class="btn-row" style="display:none;" id="conveyor-change-row">
+        <button type="button" class="btn btn--ghost" id="conveyor-change-btn">Load different footage</button>
+      </div>
+
+      <div class="field" style="margin-top:14px;">
+        <label for="conveyor-interval">Auto-inspection interval (seconds)</label>
+        <input type="text" id="conveyor-interval" value="3">
+      </div>
+      <button type="button" class="btn" id="conveyor-toggle-btn" disabled>Start auto-inspection</button>
+      <div class="pane-status" id="conveyor-status"></div>
+
+      <div class="conveyor-log" id="conveyor-log">
+        <div class="conveyor-log__empty">Captured frames will appear here as the line runs.</div>
+      </div>
+    </div>
+
+    <!-- ============== Source: uploaded video (manual frame capture) ============== -->
+    <div class="source-pane" id="source-video" style="display:none;">
+      <div class="dropzone" id="video-input-zone">
+        <div class="dropzone__icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="5" width="14" height="14" rx="2"/><path d="M23 7l-6 5 6 5V7z"/></svg>
+        </div>
+        <div class="dropzone__title">Drop a video or click to browse</div>
+        <div class="dropzone__hint">MP4/WebM &middot; scrub to a frame, then capture and inspect it</div>
+        <input type="file" id="video-file-input" accept="video/*" style="display:none;">
+      </div>
+      <video id="upload-video" style="display:none;" controls playsinline></video>
+      <div class="btn-row" style="display:none;" id="video-change-row">
+        <button type="button" class="btn btn--ghost" id="video-change-btn">Load different video</button>
+      </div>
+
+      <button type="button" class="btn" id="video-capture-btn" style="margin-top:14px;" disabled>Capture current frame &amp; inspect</button>
+    </div>
+
+    <div class="field" style="margin-top:18px;">
+      <label for="product-type">Product type</label>
+      <select id="product-type">
+        <option value="fabric_patch">fabric_patch</option>
+        <option value="woven_roll">woven_roll</option>
+        <option value="knit_sample">knit_sample</option>
+      </select>
+    </div>
+
+    <canvas id="capture-canvas" style="display:none;"></canvas>
+  </section>
+
+  <section class="panel" id="result-panel" style="display:none;">
+    <h2 class="panel__title">Result</h2>
+    <p class="panel__subtitle" id="result-subtitle"></p>
+
+    <div class="stamp-wrap" id="stamp-wrap" style="display:block; text-align:center;">
+      <img id="result-img" style="max-width:100%; border-radius:3px; border:1px solid var(--border-strong);">
+      <div class="stamp" id="stamp">PASS</div>
+    </div>
+
+    <div class="readout" style="margin-top:16px;">
+      <div class="readout-row"><span class="readout-row__label">Inspection ID</span><span class="readout-row__value" id="r-id">&mdash;</span></div>
+      <div class="readout-row"><span class="readout-row__label">Status</span><span class="readout-row__value" id="r-status">&mdash;</span></div>
+      <div class="readout-row"><span class="readout-row__label">Defects detected</span><span class="readout-row__value" id="r-defects">&mdash;</span></div>
+      <div class="readout-row"><span class="readout-row__label">Max severity</span><span class="readout-row__value" id="r-severity">&mdash;</span></div>
+      <div class="readout-row"><span class="readout-row__label">Classifier confidence</span><span class="readout-row__value" id="r-conf">&mdash;</span></div>
+      <div class="readout-row"><span class="readout-row__label">Anomaly score</span><span class="readout-row__value" id="r-anomaly">&mdash;</span></div>
+      <div class="readout-row"><span class="readout-row__label">Defect area ratio</span><span class="readout-row__value" id="r-area">&mdash;</span></div>
+      <div class="readout-row"><span class="readout-row__label">Processing time</span><span class="readout-row__value" id="r-time">&mdash;</span></div>
+    </div>
+
+    <div id="result-reasons" style="margin-top:10px; font-size:11.5px; color:var(--text-secondary);"></div>
+  </section>
+</div>
+
+<section class="panel" id="empty-hint">
+  <div class="empty-state">
+    <div class="empty-state__title">No result yet</div>
+    Pick a source and run an inspection to see the pipeline output here.
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/inspect.js') }}"></script>
+{% endblock %}

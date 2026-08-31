@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}History{% endblock %}
+{% block eyebrow %}Records{% endblock %}
+{% block heading %}Inspection history{% endblock %}
+{% block topmeta %}<a href="/api/inspections/export" class="btn btn--ghost" id="export-btn">Export CSV</a>{% endblock %}
+
+{% block content %}
+<section class="panel">
+  <div class="filters">
+    <select id="filter-status">
+      <option value="">All statuses</option>
+      <option value="PASS">PASS</option>
+      <option value="FAIL">FAIL</option>
+      <option value="INVALID">INVALID</option>
+    </select>
+    <select id="filter-defect">
+      <option value="">All defects</option>
+      <option value="color">color</option>
+      <option value="cut">cut</option>
+      <option value="hole">hole</option>
+      <option value="metal_contamination">metal_contamination</option>
+      <option value="thread">thread</option>
+      <option value="anomaly">anomaly</option>
+    </select>
+    <input type="date" id="filter-date">
+    <button class="btn btn--ghost" id="filter-clear">Clear</button>
+  </div>
+
+  <div id="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Timestamp</th>
+          <th>Status</th>
+          <th>Severity</th>
+          <th>Defects</th>
+          <th>Confidence</th>
+          <th>Anomaly</th>
+          <th>Area ratio</th>
+          <th>Latency</th>
+        </tr>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+  <div class="empty-state" id="empty-state" style="display:none;">
+    <div class="empty-state__title">No inspections match these filters</div>
+    Try clearing filters or run a new inspection from the Inspect tab.
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/history.js') }}"></script>
+{% endblock %}
