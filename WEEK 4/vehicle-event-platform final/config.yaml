@@ -1,0 +1,187 @@
+model:
+  path: yolov8n.pt
+  confidence: 0.4
+  classes:
+  - car
+  - truck
+  - bus
+  - motorcycle
+  input_resolution:
+  - 640
+  - 640
+  device: cpu
+tracker:
+  type: bytetrack
+  track_activation_threshold: 0.25
+  lost_track_buffer: 30
+  minimum_matching_threshold: 0.8
+video:
+  default_source: webcam
+  webcam_index: 0
+  rtsp_url: ''
+  frame_skip: 0
+  max_fps: 30
+zones:
+- id: entrance_lane
+  name: Entrance Gate Lane
+  type: line_crossing
+  line:
+  - - 208
+    - 122
+  - - 495
+    - 124
+  expected_direction: A_to_B
+  in_label: IN
+  out_label: OUT
+  monitored_classes:
+  - car
+  - truck
+  - bus
+  - motorcycle
+  rules:
+  - wrong_direction
+  color:
+  - 0
+  - 255
+  - 0
+- id: parking_area
+  name: Main Parking Area
+  type: polygon
+  polygon:
+  - - 496
+    - 204
+  - - 1131
+    - 195
+  - - 1263
+    - 483
+  - - 494
+    - 494
+  max_capacity: 20
+  dwell_threshold_seconds: 300
+  monitored_classes:
+  - car
+  - truck
+  - bus
+  - motorcycle
+  rules:
+  - loitering
+  - occupancy
+  color:
+  - 0
+  - 200
+  - 255
+- id: no_parking_zone
+  name: Fire Lane / No-Parking Zone
+  type: polygon
+  polygon:
+  - - 663
+    - 538
+  - - 1105
+    - 494
+  - - 1280
+    - 604
+  - - 727
+    - 581
+  grace_period_seconds: 30
+  monitored_classes:
+  - car
+  - truck
+  - bus
+  - motorcycle
+  rules:
+  - intrusion
+  - parking_violation
+  color:
+  - 0
+  - 0
+  - 255
+rules:
+- id: parking_violation
+  name: Parking Violation (No-Parking Zone)
+  event_type: PARKING_VIOLATION
+  severity: CRITICAL
+  enabled: true
+  zone: no_parking_zone
+  condition: stationary_in_zone
+  threshold_seconds: 30
+  stationary_px_threshold: 10
+  stationary_frames: 15
+- id: intrusion
+  name: Restricted Zone Intrusion
+  event_type: ZONE_INTRUSION
+  severity: HIGH
+  enabled: true
+  zone: no_parking_zone
+  condition: zone_entry
+  cooldown_seconds: 60
+- id: loitering
+  name: Loitering Detection
+  event_type: LOITERING
+  severity: WARNING
+  enabled: true
+  zone: parking_area
+  condition: dwell_exceeded
+  threshold_seconds: 300
+  reentry_window_seconds: 60
+  cooldown_seconds: 300
+- id: over_capacity
+  name: Parking Over Capacity
+  event_type: OVER_CAPACITY
+  severity: CRITICAL
+  enabled: true
+  zone: parking_area
+  condition: occupancy_exceeded
+  threshold: 20
+  hysteresis: 2
+- id: wrong_direction
+  name: Wrong-Way Detection (Exit Only Lane)
+  event_type: WRONG_DIRECTION
+  severity: CRITICAL
+  enabled: true
+  zone: entrance_lane
+  condition: direction_violation
+  expected_direction: A_to_B
+  cooldown_seconds: 30
+dwell:
+  lost_track_grace_seconds: 5
+  max_history_minutes: 60
+evidence:
+  enabled: true
+  save_full_frame: true
+  save_crop: true
+  save_metadata_json: true
+  clip_enabled: true
+  clip_before_seconds: 3
+  clip_after_seconds: 3
+  clip_fps: 10
+  max_frame_buffer: 90
+  storage_path: ./evidence
+alerts:
+  channels:
+  - type: in_app_websocket
+    enabled: true
+  - type: webhook_simulated
+    enabled: true
+    endpoint: https://webhook.example.com/alerts
+    method: POST
+  - type: email_simulated
+    enabled: true
+    recipient: admin@example.com
+events:
+  min_active_duration_seconds: 5
+  default_cooldown_seconds: 30
+  max_active_events: 500
+dashboard:
+  live_refresh_interval_ms: 1000
+  websocket_frame_quality: 70
+  max_websocket_fps: 15
+  occupancy_chart_minutes: 10
+performance:
+  log_metrics_interval_seconds: 10
+  enable_fps_overlay: true
+  enable_cpu_monitoring: true
+logging:
+  level: INFO
+  file: ./logs/app.log
+  max_bytes: 10485760
+  backup_count: 5

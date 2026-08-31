@@ -1,0 +1,35 @@
+# =====================================================================
+# Vehicle Event Detection & Alerting Platform — Requirements
+# Python 3.11+ required  |  Install: pip3.11 install -r requirements.txt
+# =====================================================================
+
+# Core ML / Vision
+ultralytics>=8.3.0          # YOLOv8 detection & tracking (installed: 8.4.105)
+supervision>=0.28.0         # Detection utilities & ByteTrack (installed: 0.29.1)
+opencv-python-headless>=4.10.0  # Video processing, no GUI needed (installed: 4.10.0.84)
+
+# Web Framework
+fastapi>=0.111.0            # Async REST API framework (installed: 0.140.0)
+uvicorn[standard]>=0.30.0   # ASGI server with WebSocket support (installed: 0.51.0)
+python-multipart>=0.0.9     # File upload parsing (installed: 0.0.32)
+websockets>=12.0            # WebSocket protocol (installed: 16.1.1)
+
+# Database (async)
+aiosqlite>=0.20.0           # Async SQLite driver (installed: 0.22.1)
+sqlalchemy[asyncio]>=2.0.0  # ORM with async support (installed: 2.0.51)
+
+# Configuration
+pyyaml>=6.0.1               # YAML config loading (installed: 6.0.3)
+python-dotenv>=1.0.0        # .env file support (installed: 1.2.2)
+
+# System monitoring
+psutil>=5.9.0               # CPU/memory/process metrics (installed: 6.0.0)
+
+# Testing
+pytest>=8.0.0               # Test runner (installed: 9.1.1)
+pytest-asyncio>=0.23.0      # Async test support (installed: 1.4.0)
+httpx>=0.27.0               # Async HTTP client for API tests (installed: 0.28.1)
+
+# Utilities
+numpy>=1.24.0               # Numerical arrays (installed: 1.26.4)
+Pillow>=10.0.0              # Image processing (installed: 10.0.1)

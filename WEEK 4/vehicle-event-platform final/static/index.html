@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vehicle Event Platform — Live Dashboard</title>
+  <meta name="description" content="Intelligent Vehicle Event Detection and Alerting Platform — Live Dashboard showing real-time detections, zone occupancy, events, and alerts.">
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- ── Navigation ────────────────────────────────────────────────── -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <a href="/" class="navbar-brand" id="nav-brand">
+    <div class="logo-icon" aria-hidden="true">🚗</div>
+    VehicleSense
+  </a>
+  <ul class="navbar-nav" role="list">
+    <li><a href="/" class="active" id="nav-dashboard">📊 Dashboard</a></li>
+    <li><a href="/history.html" id="nav-history">📋 Event History</a></li>
+    <li><a href="/docs" id="nav-api" target="_blank">🔌 API Docs</a></li>
+  </ul>
+  <div class="navbar-status">
+    <span class="live-dot" id="ws-dot"></span>
+    <span id="ws-status" style="color:var(--text-muted);font-size:0.78rem;">Connecting...</span>
+    <span style="color:var(--border);margin:0 6px;">|</span>
+    <span class="live-dot" id="pipeline-dot" style="background:var(--text-muted)"></span>
+    <span id="pipeline-status" style="color:var(--text-muted);font-size:0.78rem;">Idle</span>
+  </div>
+</nav>
+
+<!-- ── Page Content ──────────────────────────────────────────────── -->
+<main class="container" role="main">
+
+  <div class="page-header">
+    <h1 class="page-title">Live Dashboard</h1>
+    <p class="page-subtitle">Real-time vehicle detection, zone monitoring, and event alerts</p>
+  </div>
+
+  <!-- ── Row 1: Top Metrics ─────────────────────────────────────── -->
+  <div class="grid grid-4" style="margin-bottom:16px">
+
+    <div class="metric-card" id="card-fps">
+      <span class="metric-icon" aria-hidden="true">⚡</span>
+      <div class="metric-label">Processing FPS</div>
+      <div class="metric-value accent" id="metric-fps">0.0</div>
+      <div class="metric-sub">Frames per second</div>
+    </div>
+
+    <div class="metric-card" id="card-tracks">
+      <span class="metric-icon" aria-hidden="true">🚗</span>
+      <div class="metric-label">Active Tracks</div>
+      <div class="metric-value" id="metric-tracks">0</div>
+      <div class="metric-sub">Tracked vehicles now</div>
+    </div>
+
+    <div class="metric-card" id="card-events">
+      <span class="metric-icon" aria-hidden="true">🔔</span>
+      <div class="metric-label">Active Events</div>
+      <div class="metric-value warning" id="metric-events">0</div>
+      <div class="metric-sub">Events needing attention</div>
+    </div>
+
+    <div class="metric-card" id="card-total">
+      <span class="metric-icon" aria-hidden="true">📊</span>
+      <div class="metric-label">Total Events (24h)</div>
+      <div class="metric-value" id="metric-total-events">0</div>
+      <div class="metric-sub">Events in last 24 hours</div>
+    </div>
+
+  </div>
+
+  <!-- ── Row 2: Video Feed + Controls ──────────────────────────── -->
+  <div class="grid" style="grid-template-columns:1fr 340px;gap:16px;margin-bottom:16px">
+
+    <!-- Live Feed -->
+    <div class="card" style="padding:0;overflow:hidden">
+      <div class="video-container" style="aspect-ratio:auto;height:400px" id="video-container">
+        <img id="live-feed" class="video-feed" alt="Live video feed" style="display:none">
+        <div class="video-placeholder" id="video-placeholder">
+          <span class="icon" aria-hidden="true">📹</span>
+          <p>No video source active</p>
+          <p style="font-size:0.72rem">Upload a video or start your webcam →</p>
+        </div>
+        <!-- Overlay tags -->
+        <div class="video-overlay" id="video-overlay" aria-live="polite">
+          <span class="video-overlay-tag" id="tag-fps">FPS: 0</span>
+          <span class="video-overlay-tag" id="tag-tracks">Tracks: 0</span>
+          <span class="video-overlay-tag" id="tag-events">Events: 0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Video Controls -->
+    <div class="control-panel" id="video-controls">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:0.85rem;font-weight:600;color:var(--text-primary)">Video Source</span>
+        <button class="btn btn-danger btn-sm" id="stop-btn" disabled>⏹ Stop</button>
+      </div>
+
+      <div class="control-tabs" role="tablist">
+        <button class="control-tab active" data-tab="file" role="tab" id="tab-file">📁 File</button>
+        <button class="control-tab" data-tab="webcam" role="tab" id="tab-webcam">📷 Webcam</button>
+        <button class="control-tab" data-tab="rtsp" role="tab" id="tab-rtsp">📡 RTSP</button>
+        <button class="control-tab" data-tab="zones" role="tab" id="tab-zones">🗺️ Zones</button>
+      </div>
+
+      <div class="control-panel-body">
+        <!-- File Upload -->
+        <div class="active" id="panel-file">
+          <form id="upload-form" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="video-file">Select Video File</label>
+              <input type="file" id="video-file" accept=".mp4,.avi,.mov,.mkv,.webm"
+                style="padding:6px;cursor:pointer">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%" id="upload-btn">
+              ⬆ Upload &amp; Start
+            </button>
+          </form>
+        </div>
+
+        <!-- Webcam -->
+        <div id="panel-webcam">
+          <div class="form-group">
+            <label for="webcam-index">Camera Index</label>
+            <input type="number" id="webcam-index" value="0" min="0" max="10">
+          </div>
+          <button class="btn btn-success" style="width:100%" id="webcam-btn">
+            📷 Start Webcam
+          </button>
+        </div>
+
+        <!-- RTSP -->
+        <div id="panel-rtsp">
+          <div class="form-group">
+            <label for="rtsp-url">RTSP URL</label>
+            <input type="url" id="rtsp-url" placeholder="rtsp://user:pass@ip:554/stream">
+          </div>
+          <button class="btn btn-primary" style="width:100%" id="rtsp-btn">
+            📡 Connect Stream
+          </button>
+        </div>
+
+        <!-- Zone Editor Panel -->
+        <div id="panel-zones">
+          <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:10px;line-height:1.5">
+            Drag zones or corner handles on the video to reposition and resize them.
+            Click <strong>💾 Save</strong> to write changes back to config.
+          </p>
+
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button class="btn btn-primary" style="width:100%" id="zone-edit-toggle">
+              ✏️ Start Editing
+            </button>
+            <button class="btn btn-success" style="width:100%" id="zone-save-btn" disabled>
+              💾 Save Zone Changes
+            </button>
+            <button class="btn btn-ghost btn-sm" style="width:100%" id="zone-reload-btn">
+              🔄 Reload from Config
+            </button>
+          </div>
+
+          <div id="zone-status" style="
+            margin-top:10px;
+            font-size:0.75rem;
+            color:var(--text-muted);
+            min-height:32px;
+            line-height:1.5;
+          "></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Row 3: Zone Occupancy + Line Counts + Alert List ────────── -->
+  <div class="grid grid-3" style="margin-bottom:16px">
+
+    <!-- Zone Occupancy -->
+    <div class="card" id="card-zone-occ">
+      <div class="card-header">
+        <span class="card-title">Zone Occupancy</span>
+        <span class="card-icon" aria-hidden="true">🅿️</span>
+      </div>
+      <div id="zone-occupancy-list">
+        <p class="text-muted" style="font-size:0.8rem;text-align:center;padding:16px">Waiting for data...</p>
+      </div>
+    </div>
+
+    <!-- Line Crossing Counts -->
+    <div class="card" id="card-line-counts">
+      <div class="card-header">
+        <span class="card-title">Line Crossings</span>
+        <span class="card-icon" aria-hidden="true">↕️</span>
+      </div>
+      <div id="line-counts-list">
+        <p class="text-muted" style="font-size:0.8rem;text-align:center;padding:16px">Waiting for data...</p>
+      </div>
+    </div>
+
+    <!-- Recent Alerts -->
+    <div class="card" id="card-alerts">
+      <div class="card-header">
+        <span class="card-title">Recent Alerts</span>
+        <a href="/history.html" class="btn btn-ghost btn-sm" id="view-all-alerts">View All →</a>
+      </div>
+      <div class="alert-list" id="alert-list" aria-live="polite" aria-label="Recent alerts">
+        <p class="text-muted" style="text-align:center;font-size:0.8rem;padding:16px">No recent alerts</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Row 4: Charts ──────────────────────────────────────────── -->
+  <div class="grid grid-3" style="margin-bottom:16px">
+
+    <!-- Events Over Time -->
+    <div class="card" id="card-events-time" style="grid-column:span 2">
+      <div class="card-header">
+        <span class="card-title">Events Over Time (24h)</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:0.75rem;color:var(--text-muted)">FPS Sparkline:</span>
+          <div style="width:80px;height:28px"><canvas id="chart-fps"></canvas></div>
+        </div>
+      </div>
+      <div style="height:180px"><canvas id="chart-events-time" aria-label="Events over time chart"></canvas></div>
+    </div>
+
+    <!-- Events by Type -->
+    <div class="card" id="card-by-type">
+      <div class="card-header">
+        <span class="card-title">Events by Type</span>
+        <span class="card-icon" aria-hidden="true">🏷️</span>
+      </div>
+      <div style="height:180px"><canvas id="chart-by-type" aria-label="Events by type donut chart"></canvas></div>
+    </div>
+
+  </div>
+
+  <div class="grid grid-2" style="margin-bottom:16px">
+
+    <!-- Severity Breakdown -->
+    <div class="card" id="card-severity">
+      <div class="card-header">
+        <span class="card-title">Events by Severity</span>
+        <span class="card-icon" aria-hidden="true">⚠️</span>
+      </div>
+      <div style="height:180px"><canvas id="chart-severity" aria-label="Events by severity bar chart"></canvas></div>
+    </div>
+
+    <!-- Occupancy Trend -->
+    <div class="card" id="card-occ-trend">
+      <div class="card-header">
+        <span class="card-title">Occupancy Trend</span>
+        <span class="card-icon" aria-hidden="true">📈</span>
+      </div>
+      <div style="height:180px"><canvas id="chart-occupancy" aria-label="Occupancy trend line chart"></canvas></div>
+    </div>
+
+  </div>
+
+  <!-- ── Row 5: Performance Metrics ──────────────────────────────── -->
+  <div class="card" id="card-perf">
+    <div class="card-header">
+      <span class="card-title">Performance Metrics</span>
+      <span class="card-icon" aria-hidden="true">⏱️</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 32px">
+
+      <div class="perf-row">
+        <span class="perf-label">Detection (YOLO)</span>
+        <div class="perf-bar-wrap"><div class="progress-bar" id="perf-det-bar" style="width:0%"></div></div>
+        <span class="perf-value" id="perf-det-val">—</span>
+      </div>
+
+      <div class="perf-row">
+        <span class="perf-label">Tracking</span>
+        <div class="perf-bar-wrap"><div class="progress-bar" id="perf-track-bar" style="width:0%"></div></div>
+        <span class="perf-value" id="perf-track-val">—</span>
+      </div>
+
+      <div class="perf-row">
+        <span class="perf-label">Rule Engine</span>
+        <div class="perf-bar-wrap"><div class="progress-bar" id="perf-rules-bar" style="width:0%"></div></div>
+        <span class="perf-value" id="perf-rules-val">—</span>
+      </div>
+
+      <div class="perf-row">
+        <span class="perf-label">Total / frame</span>
+        <div class="perf-bar-wrap"><div class="progress-bar" id="perf-total-bar" style="width:0%"></div></div>
+        <span class="perf-value" id="perf-total-val">—</span>
+      </div>
+
+      <div class="perf-row">
+        <span class="perf-label">CPU Usage</span>
+        <div class="perf-bar-wrap"></div>
+        <span class="perf-value" id="perf-cpu-val">—</span>
+      </div>
+
+      <div class="perf-row">
+        <span class="perf-label">Memory</span>
+        <div class="perf-bar-wrap"></div>
+        <span class="perf-value" id="perf-mem-val">—</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Row 6: Run Tests ──────────────────────────────────────── -->
+  <div class="card" id="card-tests" style="margin-top:16px">
+    <div class="card-header">
+      <span class="card-title">🧪 Automated Testing &amp; Experiments</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <a href="/api/tests/latest-csv" class="btn btn-ghost btn-sm" id="download-csv-btn" style="display:none">
+          📥 Download CSV
+        </a>
+        <button class="btn btn-primary btn-sm" id="run-tests-btn">
+          ▶ Run Tests
+        </button>
+      </div>
+    </div>
+
+    <div id="test-results" style="padding:12px 16px">
+      <p class="text-muted" style="font-size:0.8rem;text-align:center;padding:8px">
+        Click <strong>"Run Tests"</strong> to execute the full test suite (66 unit tests) and 5 comparison experiments.
+        Results will be saved to CSV.
+      </p>
+    </div>
+
+    <!-- Results detail (hidden until run) -->
+    <div id="test-results-detail" style="display:none;padding:0 16px 16px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <!-- Test Suite Results -->
+        <div>
+          <h3 style="font-size:0.85rem;font-weight:600;margin-bottom:8px;color:var(--text-primary)">
+            Unit Tests
+          </h3>
+          <div id="test-suite-summary" style="font-size:0.8rem;line-height:1.8"></div>
+        </div>
+        <!-- Experiment Results -->
+        <div>
+          <h3 style="font-size:0.85rem;font-weight:600;margin-bottom:8px;color:var(--text-primary)">
+            Experiments
+          </h3>
+          <div id="experiment-summary" style="font-size:0.8rem;line-height:1.8"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ── Toast Container ────────────────────────────────────────────── -->
+<div id="toast-container" aria-live="polite" aria-label="Notifications"></div>
+
+<script type="module" src="/static/js/dashboard.js"></script>
+</body>
+</html>

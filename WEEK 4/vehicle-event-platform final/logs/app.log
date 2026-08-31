@@ -1,0 +1,373 @@
+2026-07-27 13:56:38,656 [INFO] app.events.event_manager: New event: 3a73e24b-6c91-4875-bc21-f053087973db type=OVER_CAPACITY zone=parking_area track=75
+2026-07-27 13:56:38,657 [INFO] app.events.event_manager: New event: ae295390-56a7-4f1d-854d-d76d9c91645a type=OVER_CAPACITY zone=parking_area track=80
+2026-07-27 13:56:38,657 [INFO] app.events.event_manager: New event: 22deaaad-d964-4c21-8302-b5876b56a81b type=OVER_CAPACITY zone=parking_area track=81
+2026-07-27 13:56:38,657 [INFO] app.events.event_manager: New event: 06be5e21-6def-4d18-931a-b32fbafdc559 type=OVER_CAPACITY zone=parking_area track=82
+2026-07-27 13:56:38,657 [INFO] app.events.event_manager: New event: 21d12b61-eb99-4ec4-8f99-b5e83e505d3e type=OVER_CAPACITY zone=parking_area track=83
+2026-07-27 13:56:38,657 [INFO] app.events.event_manager: New event: 9009b029-6823-41c7-8216-329ba24618b2 type=OVER_CAPACITY zone=parking_area track=84
+2026-07-27 13:56:38,657 [INFO] app.events.event_manager: New event: bc1eb035-b901-4bfa-9ba3-4bbb59dc5835 type=ZONE_INTRUSION zone=no_parking_zone track=101
+2026-07-27 13:56:38,657 [INFO] experiments:   Confidence 0.6: P=0.176 R=0.750 F1=0.286 FP=56 FN=4
+2026-07-27 13:56:38,657 [INFO] experiments: Experiment 4: Event Debouncing
+2026-07-27 13:56:38,657 [INFO] app.events.event_manager: New event: 6778af67-e798-44c9-90f9-b36605d2c007 type=ZONE_INTRUSION zone=false_zone track=5002
+2026-07-27 13:56:38,657 [INFO] app.events.event_manager: New event: 43254818-19bf-40f5-8606-997531e8ff49 type=ZONE_INTRUSION zone=no_parking_zone track=11
+2026-07-27 13:56:38,657 [INFO] app.events.event_manager: New event: 4c2e6abc-6ce6-427d-9d84-eee0e1da1a6c type=ZONE_INTRUSION zone=no_parking_zone track=12
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: f79df7ba-ff45-48f4-9e04-429f9ad795c6 type=ZONE_INTRUSION zone=no_parking_zone track=13
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: be9771bf-4b6c-400f-b25e-9a504b2c51ea type=ZONE_INTRUSION zone=no_parking_zone track=14
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: 3b450019-3ae3-4e93-b721-3e26ce3f8930 type=LOITERING zone=parking_area track=21
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: 96a04e1b-1b22-41d8-8b71-a1dc6202617a type=LOITERING zone=parking_area track=22
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: eb243e60-2d1e-45cc-802a-fe8e52a54cb4 type=LINE_CROSS_IN zone=entrance_lane track=31
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: da91770f-132c-4ec6-b2b7-797760d3700a type=LINE_CROSS_IN zone=entrance_lane track=32
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: 28f87266-c994-48f6-84fa-de9eecd976ca type=WRONG_DIRECTION zone=entrance_lane track=42
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: 4e4c61ac-a706-4906-8dd9-1aeee7802a0b type=OVER_CAPACITY zone=parking_area track=53
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: acafdcf4-e7e9-4c3e-a6e3-654ec9325bee type=OVER_CAPACITY zone=parking_area track=54
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: b91dd153-892c-4c39-838c-bcb5bdf5f732 type=OVER_CAPACITY zone=parking_area track=55
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: a890ed19-5f8e-49f5-97d5-996f8f701361 type=OVER_CAPACITY zone=parking_area track=56
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: 00a29185-b2b4-48f1-ba52-e796649a423b type=OVER_CAPACITY zone=parking_area track=57
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: ed223836-ff2d-4698-8a3c-c805038acd08 type=OVER_CAPACITY zone=parking_area track=58
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: 7e2e8761-a1e1-4514-9c5c-0c0e0f1e650c type=OVER_CAPACITY zone=parking_area track=59
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: c6642368-1435-4f71-afd9-8e551d4b2a12 type=OVER_CAPACITY zone=parking_area track=60
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: f098aa69-03d1-4593-b17d-2ef05e1df519 type=OVER_CAPACITY zone=parking_area track=62
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: e0790177-e11d-46b7-a558-a3c4b427954b type=OVER_CAPACITY zone=parking_area track=63
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: 7d219026-ecd1-4409-a24b-c691f3a3f186 type=OVER_CAPACITY zone=parking_area track=66
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: 8cf8d739-105e-497e-afd2-49839b3ecd14 type=OVER_CAPACITY zone=parking_area track=67
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: 64fd6263-c323-4f51-ae73-3116f6cf8960 type=OVER_CAPACITY zone=parking_area track=68
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: a106acd9-75be-489c-afa9-bc1cd1561176 type=OVER_CAPACITY zone=parking_area track=69
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: 7cb79c65-e906-40d8-8071-10bd39f36ee9 type=OVER_CAPACITY zone=parking_area track=70
+2026-07-27 13:56:38,658 [INFO] app.events.event_manager: New event: 8d761d9b-5680-4258-93ef-be3a3b6a060a type=OVER_CAPACITY zone=parking_area track=71
+2026-07-27 13:56:38,659 [INFO] app.events.event_manager: New event: 66751d46-cb22-4dd8-b969-fca1c2417604 type=OVER_CAPACITY zone=parking_area track=73
+2026-07-27 13:56:38,659 [INFO] app.events.event_manager: New event: 69bae469-9887-47bb-a00e-5225d8628454 type=OVER_CAPACITY zone=parking_area track=74
+2026-07-27 13:56:38,659 [INFO] app.events.event_manager: New event: 3a6a240b-55f2-40fa-8abc-84b73b74d98b type=OVER_CAPACITY zone=parking_area track=75
+2026-07-27 13:56:38,659 [INFO] app.events.event_manager: New event: a506a0dd-7c88-4152-8a88-7160b1236e05 type=OVER_CAPACITY zone=parking_area track=76
+2026-07-27 13:56:38,659 [INFO] app.events.event_manager: New event: f366e089-f551-4086-9451-c786dbfc5c4a type=OVER_CAPACITY zone=parking_area track=77
+2026-07-27 13:56:38,659 [INFO] app.events.event_manager: New event: 29afeba7-cec6-4f14-abfd-2992d2e9e787 type=OVER_CAPACITY zone=parking_area track=79
+2026-07-27 13:56:38,659 [INFO] app.events.event_manager: New event: bab4c7c9-f7db-4e0a-a291-14c1821e88b3 type=OVER_CAPACITY zone=parking_area track=51
+2026-07-27 13:56:38,659 [INFO] app.events.event_manager: New event: e429a9df-b1df-4734-8f6f-a849b0a0ee05 type=OVER_CAPACITY zone=parking_area track=61
+2026-07-27 13:56:38,659 [INFO] app.events.event_manager: New event: c72450ef-da69-4caf-b86a-9a0215466662 type=OVER_CAPACITY zone=parking_area track=64
+2026-07-27 13:56:38,659 [INFO] app.events.event_manager: New event: d7c9c01e-04ab-4028-a3c4-6b38832d432d type=OVER_CAPACITY zone=parking_area track=65
+2026-07-27 13:56:38,659 [INFO] app.events.event_manager: New event: c7449628-9718-4d3b-9342-b75ea79768ae type=OVER_CAPACITY zone=parking_area track=72
+2026-07-27 13:56:38,659 [INFO] app.events.event_manager: New event: ece52551-0ccc-4b1d-b42c-ec8ed839efd6 type=OVER_CAPACITY zone=parking_area track=78
+2026-07-27 13:56:38,659 [INFO] app.events.event_manager: New event: 6c247765-f376-4c15-929b-3e4ba0415708 type=OVER_CAPACITY zone=parking_area track=80
+2026-07-27 13:56:38,659 [INFO] app.events.event_manager: New event: db630972-b2f3-4e62-83d4-261c8d066999 type=OVER_CAPACITY zone=parking_area track=81
+2026-07-27 13:56:38,659 [INFO] app.events.event_manager: New event: 8cd6a2f0-f57f-4820-b3d9-6f8f8ff05877 type=OVER_CAPACITY zone=parking_area track=82
+2026-07-27 13:56:38,659 [INFO] app.events.event_manager: New event: 1c525e14-cf7d-4591-98a6-59af379da539 type=OVER_CAPACITY zone=parking_area track=83
+2026-07-27 13:56:38,659 [INFO] app.events.event_manager: New event: e58a640d-e19f-416f-9b79-f000894c78b1 type=ZONE_INTRUSION zone=no_parking_zone track=101
+2026-07-27 13:56:38,660 [INFO] experiments:   Debouncing enabled: dup_rate=0.000 detected=61
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: 6adc89d8-a831-4204-9707-f7b39e56b63e type=ZONE_INTRUSION zone=false_zone track=5002
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: 8af7e38b-1d83-4457-b902-a97ea088735f type=ZONE_INTRUSION zone=no_parking_zone track=11
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: 5e6a0999-42c6-403e-a913-bea2f697e424 type=ZONE_INTRUSION zone=no_parking_zone track=12
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: 11bd6bef-084a-4bc9-ac57-5765d9b45bb7 type=ZONE_INTRUSION zone=no_parking_zone track=13
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: 33fed822-28df-48a3-b5c8-f00e47ac9695 type=ZONE_INTRUSION zone=no_parking_zone track=14
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: 6d0f4b8b-e5b3-44db-9147-e23291fea2a6 type=LOITERING zone=parking_area track=21
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: f638c853-ee85-4505-a7c2-8a57e88d277d type=LOITERING zone=parking_area track=22
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: b2e35ebc-f502-42ac-a4a9-0d99aa388140 type=LOITERING zone=parking_area track=1022
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: d5bb4db2-fea2-4ddc-9e84-2351bf2ec172 type=LINE_CROSS_IN zone=entrance_lane track=31
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: f7c0b9cb-c767-422b-bb9b-7ce3e5ac3350 type=LINE_CROSS_IN zone=entrance_lane track=1031
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: 5636110c-a5db-45f5-bf79-d5e277b32fad type=LINE_CROSS_IN zone=entrance_lane track=32
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: d9115ce6-7f2d-4d6b-9fd2-db938f93e1fb type=WRONG_DIRECTION zone=entrance_lane track=42
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: 2a2c9c71-c658-4366-a313-5a294f468eb1 type=OVER_CAPACITY zone=parking_area track=53
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: 5529f3f1-253e-4643-a312-c8d3955e22d0 type=OVER_CAPACITY zone=parking_area track=1053
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: ee393fd8-60a0-4a0c-b057-5faa7ef5d45d type=OVER_CAPACITY zone=parking_area track=54
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: 9382bb63-2315-4b29-bd2d-646a6b9ffd59 type=OVER_CAPACITY zone=parking_area track=1054
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: d50c431c-e69b-466e-be0c-04a3dc3f34bf type=OVER_CAPACITY zone=parking_area track=55
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: 633ac6ee-10cb-4fe8-8c19-6baa1efb9e7f type=OVER_CAPACITY zone=parking_area track=56
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: 9b36f17f-9346-4dc2-bafc-f00da8807d2f type=OVER_CAPACITY zone=parking_area track=1056
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: e1d5c698-67d7-48fb-b79b-76165919c489 type=OVER_CAPACITY zone=parking_area track=57
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: 2810a63c-6aaf-4900-a997-2e61210772f8 type=OVER_CAPACITY zone=parking_area track=1057
+2026-07-27 13:56:38,660 [INFO] app.events.event_manager: New event: ebca5dbe-44cd-44a3-ad25-bc8876312d11 type=OVER_CAPACITY zone=parking_area track=58
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: efcd1abc-d13d-408a-908f-34e00a4082b5 type=OVER_CAPACITY zone=parking_area track=1058
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: 153193ba-91cf-42c0-a488-62dddd1d14ba type=OVER_CAPACITY zone=parking_area track=59
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: 96fdc1c1-9d3b-4c45-adc9-7b4745f2d5c8 type=OVER_CAPACITY zone=parking_area track=1059
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: c2a67ee7-be13-41ac-b2e6-b2085f6c5439 type=OVER_CAPACITY zone=parking_area track=60
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: 1d4e3750-0475-4deb-bed7-4913f845ac89 type=OVER_CAPACITY zone=parking_area track=62
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: bdb207db-a6f9-4943-804a-c6450a4a63f0 type=OVER_CAPACITY zone=parking_area track=63
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: a1719b55-6370-4350-8d5e-8a4a60b7ffd0 type=OVER_CAPACITY zone=parking_area track=1063
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: 3fdc37c6-4c89-47f0-bdbb-9427e39cea75 type=OVER_CAPACITY zone=parking_area track=66
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: a9feb082-5026-4eda-8c04-4156817ce675 type=OVER_CAPACITY zone=parking_area track=67
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: 4e176db2-df77-46c3-af8d-8094f90a0be3 type=OVER_CAPACITY zone=parking_area track=68
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: 6427b993-7d0d-4198-bc04-5f273ce05887 type=OVER_CAPACITY zone=parking_area track=69
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: cde2e016-51b2-4b78-93f1-cffbd48941cd type=OVER_CAPACITY zone=parking_area track=1069
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: 7eaebbbf-c8c7-4a09-afb8-4d99feb9ce8c type=OVER_CAPACITY zone=parking_area track=70
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: 1467ff81-ee34-4425-8011-05a1eb4841b6 type=OVER_CAPACITY zone=parking_area track=71
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: 8f1810ac-8ce9-4f2b-8735-2a322dc2cb87 type=OVER_CAPACITY zone=parking_area track=73
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: 392e8fc9-7187-45b7-8f43-cc95a0cb5bbb type=OVER_CAPACITY zone=parking_area track=1073
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: 7b21538a-3416-45d9-9b4e-8e19e73775a9 type=OVER_CAPACITY zone=parking_area track=74
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: 2ad70d69-c846-47b4-9b82-fedfcac16647 type=OVER_CAPACITY zone=parking_area track=75
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: cd3de2d6-d39c-4e54-8ae0-76b3bc097f7d type=OVER_CAPACITY zone=parking_area track=76
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: 3614625a-c83a-4f2c-8b1b-2bdf4cc632de type=OVER_CAPACITY zone=parking_area track=77
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: 94d527a5-9091-4c73-a1f6-80b896dd509c type=OVER_CAPACITY zone=parking_area track=79
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: 4bb8a707-18d9-45a2-b43a-08d73a5fcdaa type=OVER_CAPACITY zone=parking_area track=51
+2026-07-27 13:56:38,661 [INFO] app.events.event_manager: New event: 6c9c8a73-5d82-4dd0-903b-d2e4a2aa82ac type=OVER_CAPACITY zone=parking_area track=61
+2026-07-27 13:56:38,662 [INFO] app.events.event_manager: New event: a546fe4c-595b-49d1-b768-b090155cbacb type=OVER_CAPACITY zone=parking_area track=1061
+2026-07-27 13:56:38,662 [INFO] app.events.event_manager: New event: 92605435-4733-43cf-a4f3-ff2b0a498581 type=OVER_CAPACITY zone=parking_area track=64
+2026-07-27 13:56:38,662 [INFO] app.events.event_manager: New event: c30c3244-c572-4466-8713-47d970e39caa type=OVER_CAPACITY zone=parking_area track=65
+2026-07-27 13:56:38,662 [INFO] app.events.event_manager: New event: 585ccfb2-3009-493c-8d38-cd719cd66691 type=OVER_CAPACITY zone=parking_area track=1068
+2026-07-27 13:56:38,662 [INFO] app.events.event_manager: New event: 423af062-8fca-4acf-a79a-477222d47414 type=OVER_CAPACITY zone=parking_area track=72
+2026-07-27 13:56:38,662 [INFO] app.events.event_manager: New event: b48cc1ff-535e-49c2-92f2-ffd325e17f21 type=OVER_CAPACITY zone=parking_area track=1072
+2026-07-27 13:56:38,662 [INFO] app.events.event_manager: New event: 1b379ddf-9cfa-4d47-b948-250921f5f122 type=OVER_CAPACITY zone=parking_area track=1074
+2026-07-27 13:56:38,662 [INFO] app.events.event_manager: New event: 7f848f37-a9f7-48b5-a8db-be2b163d82fc type=OVER_CAPACITY zone=parking_area track=1075
+2026-07-27 13:56:38,662 [INFO] app.events.event_manager: New event: cf064e8a-073b-4354-beb6-e403536f9dc1 type=OVER_CAPACITY zone=parking_area track=1077
+2026-07-27 13:56:38,662 [INFO] app.events.event_manager: New event: a0cddbf7-fe17-4e9b-b6f6-f5e73e88d155 type=OVER_CAPACITY zone=parking_area track=78
+2026-07-27 13:56:38,662 [INFO] app.events.event_manager: New event: dd97dc1b-33a2-4803-ba49-fa8495483dae type=OVER_CAPACITY zone=parking_area track=1078
+2026-07-27 13:56:38,662 [INFO] app.events.event_manager: New event: f11a5897-20f0-41eb-be92-27b2994b10b1 type=OVER_CAPACITY zone=parking_area track=80
+2026-07-27 13:56:38,662 [INFO] app.events.event_manager: New event: 5cd77133-6982-4382-bf79-4f4d4ad91dd7 type=OVER_CAPACITY zone=parking_area track=1080
+2026-07-27 13:56:38,662 [INFO] app.events.event_manager: New event: ef1ab7c8-6efa-49f4-b9a3-e151c06c2f51 type=OVER_CAPACITY zone=parking_area track=81
+2026-07-27 13:56:38,662 [INFO] app.events.event_manager: New event: 17c1bab3-51df-4fd0-ac73-b6eca54aa379 type=OVER_CAPACITY zone=parking_area track=82
+2026-07-27 13:56:38,662 [INFO] app.events.event_manager: New event: f8b2a49a-b544-40be-be0b-ad02954cb82e type=OVER_CAPACITY zone=parking_area track=83
+2026-07-27 13:56:38,662 [INFO] app.events.event_manager: New event: 83ad712c-ac34-4999-a1b2-22c254365e23 type=ZONE_INTRUSION zone=no_parking_zone track=101
+2026-07-27 13:56:38,662 [INFO] experiments:   Debouncing disabled: dup_rate=0.265 detected=83
+2026-07-27 13:56:38,662 [INFO] experiments: Experiment 5: Input Resolution
+2026-07-27 13:56:38,662 [INFO] app.events.event_manager: New event: bd843393-7da7-4449-b595-0e15e273f9bb type=ZONE_INTRUSION zone=false_zone track=5002
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: 04401494-1b1e-4f96-a806-d4510dd4d838 type=ZONE_INTRUSION zone=no_parking_zone track=12
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: dae0f8e1-395d-44a5-8816-1d8e892768a3 type=ZONE_INTRUSION zone=no_parking_zone track=13
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: e5af7dc7-d982-444f-bfdb-4ecc46ee5b5e type=ZONE_INTRUSION zone=no_parking_zone track=14
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: 7b64ffac-7a29-443f-98b5-7249fa79dc00 type=LOITERING zone=parking_area track=21
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: f3070913-7cfe-4bbb-affe-f555d9a2141d type=LINE_CROSS_IN zone=entrance_lane track=31
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: 0f079762-e65e-4e67-bba4-bf2c968106f3 type=LINE_CROSS_IN zone=entrance_lane track=33
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: 36515406-3e9d-4120-b96f-bb97932f1fc9 type=WRONG_DIRECTION zone=entrance_lane track=41
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: 65bf4a00-5f20-494c-9799-e6e84c8312bf type=WRONG_DIRECTION zone=entrance_lane track=42
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: abb213f6-e0e5-465d-a350-d6957396d6d6 type=OVER_CAPACITY zone=parking_area track=50
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: daa270a4-cbd6-41fb-b7ad-74b49ec7301b type=OVER_CAPACITY zone=parking_area track=51
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: 61486124-fa81-497c-8faf-27e9d5690c7c type=OVER_CAPACITY zone=parking_area track=52
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: 701e7487-01cc-4c41-91f3-392ce18a85b7 type=OVER_CAPACITY zone=parking_area track=53
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: 8aeffc3a-19bb-4ffc-b540-44a56935b76a type=OVER_CAPACITY zone=parking_area track=54
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: 191d71cb-8346-4e07-8da9-960fd50f1adf type=OVER_CAPACITY zone=parking_area track=55
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: 3488183e-754a-45fe-9958-1d4cfdfae4c3 type=OVER_CAPACITY zone=parking_area track=58
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: de502c26-6349-4d25-ba42-5853f4ec249f type=OVER_CAPACITY zone=parking_area track=59
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: 676b67af-5cfc-4e08-bbdf-bdbd220131b7 type=OVER_CAPACITY zone=parking_area track=60
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: 2d9b11b2-e8d8-47e9-9128-697d0686ea50 type=OVER_CAPACITY zone=parking_area track=61
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: 919e0d01-6cc7-4d54-bd78-01e7ede0cc48 type=OVER_CAPACITY zone=parking_area track=62
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: 3661c5bb-3655-4b3a-a546-3d6eb744a2b2 type=OVER_CAPACITY zone=parking_area track=63
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: 487e8404-6395-4c14-a89b-38b47c6ffe16 type=OVER_CAPACITY zone=parking_area track=64
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: ae2c9330-76b2-465a-a740-b6440d10b5c4 type=OVER_CAPACITY zone=parking_area track=65
+2026-07-27 13:56:38,663 [INFO] app.events.event_manager: New event: 63412311-25e8-4b9b-a18a-aaa9e30f8943 type=OVER_CAPACITY zone=parking_area track=69
+2026-07-27 13:56:38,664 [INFO] app.events.event_manager: New event: 1e592b9c-1abb-45f3-bae6-a3168d561123 type=OVER_CAPACITY zone=parking_area track=70
+2026-07-27 13:56:38,664 [INFO] app.events.event_manager: New event: 60f4ec94-1fcb-48fd-b1e0-0aa520ed24e9 type=OVER_CAPACITY zone=parking_area track=71
+2026-07-27 13:56:38,664 [INFO] app.events.event_manager: New event: e2ae6ad6-ef41-4684-8263-60df7557e56d type=OVER_CAPACITY zone=parking_area track=72
+2026-07-27 13:56:38,664 [INFO] app.events.event_manager: New event: 6bf8bfc4-bdd3-43cc-8854-286dcd38a8b1 type=OVER_CAPACITY zone=parking_area track=73
+2026-07-27 13:56:38,664 [INFO] app.events.event_manager: New event: 8e82922b-f7f9-4cee-af00-5551233c94e1 type=OVER_CAPACITY zone=parking_area track=77
+2026-07-27 13:56:38,664 [INFO] app.events.event_manager: New event: 6edcfab0-7fb2-4bf3-a84e-347ad99c9544 type=OVER_CAPACITY zone=parking_area track=78
+2026-07-27 13:56:38,664 [INFO] app.events.event_manager: New event: a8fbdb03-8868-48de-bcdf-849c1e141179 type=OVER_CAPACITY zone=parking_area track=79
+2026-07-27 13:56:38,664 [INFO] app.events.event_manager: New event: cdeaec0f-69d7-432a-bbed-bdd9ae01fcf9 type=OVER_CAPACITY zone=parking_area track=56
+2026-07-27 13:56:38,664 [INFO] app.events.event_manager: New event: bb67e628-a55c-4ea8-a562-d2279283402f type=OVER_CAPACITY zone=parking_area track=57
+2026-07-27 13:56:38,664 [INFO] app.events.event_manager: New event: c4132dde-144f-417a-98ff-9966c398382e type=OVER_CAPACITY zone=parking_area track=66
+2026-07-27 13:56:38,664 [INFO] app.events.event_manager: New event: c4675038-89d1-4ad3-8520-1fbd9c852e33 type=OVER_CAPACITY zone=parking_area track=67
+2026-07-27 13:56:38,664 [INFO] app.events.event_manager: New event: 4c5f67fd-865e-4016-8bc0-6387eabb64a6 type=OVER_CAPACITY zone=parking_area track=68
+2026-07-27 13:56:38,664 [INFO] app.events.event_manager: New event: 6059317e-85ff-4edd-a059-b113670fa8a0 type=OVER_CAPACITY zone=parking_area track=74
+2026-07-27 13:56:38,664 [INFO] app.events.event_manager: New event: ba5cff70-5520-4204-83a8-95d11252f9b4 type=OVER_CAPACITY zone=parking_area track=75
+2026-07-27 13:56:38,664 [INFO] app.events.event_manager: New event: 0e8b048e-0f7d-49a6-9784-642f12de980e type=OVER_CAPACITY zone=parking_area track=76
+2026-07-27 13:56:38,664 [INFO] app.events.event_manager: New event: 964f42f6-bfe3-4086-8641-259945390a9a type=OVER_CAPACITY zone=parking_area track=80
+2026-07-27 13:56:38,664 [INFO] app.events.event_manager: New event: 32bf8e56-7973-46d5-9025-3d333c9bd9f0 type=OVER_CAPACITY zone=parking_area track=81
+2026-07-27 13:56:38,664 [INFO] app.events.event_manager: New event: 7d47b19a-8fc1-434e-9282-9b519b07c6c6 type=OVER_CAPACITY zone=parking_area track=82
+2026-07-27 13:56:38,664 [INFO] app.events.event_manager: New event: 32ebd884-6f01-4a8b-aeb0-96b857bddad7 type=OVER_CAPACITY zone=parking_area track=83
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: 06c02167-fcdb-493c-8001-821f676e9005 type=OVER_CAPACITY zone=parking_area track=84
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: eb67c600-47f5-425a-aa29-69bc650644fd type=LOITERING zone=parking_area track=100
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: c9fed9ec-9e3f-4195-8ab0-663533cf3af7 type=ZONE_INTRUSION zone=no_parking_zone track=101
+2026-07-27 13:56:38,665 [INFO] experiments:   Resolution 320x320: FPS=50.0 P=0.194 R=0.750
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: 328cf980-46c5-4dc1-a1b1-519303e50ffd type=ZONE_INTRUSION zone=false_zone track=5002
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: c3e99706-4d87-40f1-914c-21d27d5578e6 type=ZONE_INTRUSION zone=no_parking_zone track=11
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: 8a1d6170-d028-4584-95f4-16f2ba4674c8 type=ZONE_INTRUSION zone=no_parking_zone track=12
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: 712abc63-01a1-4a5c-9381-63fc4f694ab3 type=ZONE_INTRUSION zone=no_parking_zone track=13
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: 3b966cf1-adb3-432f-810e-d4446775b679 type=ZONE_INTRUSION zone=no_parking_zone track=14
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: 3ee68f8b-f253-4e78-a4d7-a1ed691a6d29 type=LOITERING zone=parking_area track=21
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: ea96d92a-4535-421b-b722-4b772277a590 type=LOITERING zone=parking_area track=22
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: b578ea86-7c56-4949-a194-4e9940e1bc73 type=LINE_CROSS_IN zone=entrance_lane track=31
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: 63f0373b-fb57-46c4-9410-ad0ecb60d005 type=LINE_CROSS_IN zone=entrance_lane track=32
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: fd346c02-c65a-4967-9d78-6485fa2dd3cd type=WRONG_DIRECTION zone=entrance_lane track=42
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: 78def16c-a708-4b7e-915e-ac46afa9c4b6 type=OVER_CAPACITY zone=parking_area track=53
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: 4cd98a08-e41e-4c48-ba36-e5eec805fdbd type=OVER_CAPACITY zone=parking_area track=54
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: e96703df-6bd0-4999-8b8a-4ad11a57325c type=OVER_CAPACITY zone=parking_area track=55
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: a80e8506-617c-4444-80c1-3152d946c3fe type=OVER_CAPACITY zone=parking_area track=56
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: 65cd4462-b923-420e-a478-2f642b4503df type=OVER_CAPACITY zone=parking_area track=57
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: d33fca82-470f-4355-aa72-a919207273e2 type=OVER_CAPACITY zone=parking_area track=58
+2026-07-27 13:56:38,665 [INFO] app.events.event_manager: New event: de91bd23-95b2-4be1-8d8a-5ec0fff66785 type=OVER_CAPACITY zone=parking_area track=59
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: f83f50fd-40fe-4227-b247-cad998b3dfc0 type=OVER_CAPACITY zone=parking_area track=60
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: ca389671-e541-40c4-95df-883d4738214b type=OVER_CAPACITY zone=parking_area track=62
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: a4240947-fcd5-4e69-a07b-d39455319805 type=OVER_CAPACITY zone=parking_area track=63
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: 93ad3379-7e39-440a-8230-5aae19e70912 type=OVER_CAPACITY zone=parking_area track=66
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: 74dce114-576e-48b6-abf8-e13f98730e61 type=OVER_CAPACITY zone=parking_area track=67
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: c3c61398-525f-483e-a0d3-5113413d9152 type=OVER_CAPACITY zone=parking_area track=68
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: d28912ee-c113-4fb6-be27-f44a17e60a01 type=OVER_CAPACITY zone=parking_area track=69
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: 2ac716a7-984e-413f-b47f-a8af8012b2e2 type=OVER_CAPACITY zone=parking_area track=70
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: f33de734-8b15-4de1-a412-ce160819ff1e type=OVER_CAPACITY zone=parking_area track=71
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: 8ebc9b0b-c257-4e2a-86bb-9c01a1b8b14b type=OVER_CAPACITY zone=parking_area track=73
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: 2a74dc87-6775-45d5-b709-438cadbb3849 type=OVER_CAPACITY zone=parking_area track=74
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: 0f0a3406-69c7-46ee-8421-ec6158ae8dfa type=OVER_CAPACITY zone=parking_area track=75
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: eb53b412-7f9b-410f-a07b-cd7034419deb type=OVER_CAPACITY zone=parking_area track=76
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: 0ce53c71-d62a-404f-9cd8-69919b9b36c7 type=OVER_CAPACITY zone=parking_area track=77
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: 83adf6e1-0bea-4332-a852-4fca01b78991 type=OVER_CAPACITY zone=parking_area track=79
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: a420a1f4-3105-4100-ab78-4e8cbdf6d10b type=OVER_CAPACITY zone=parking_area track=51
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: 0c828b3a-5681-4347-ac5d-976141ba7e1b type=OVER_CAPACITY zone=parking_area track=61
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: 5500e117-7eb5-4cb1-80c9-317c3fc2ac2c type=OVER_CAPACITY zone=parking_area track=64
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: f0e229ea-0879-4f7c-a1fd-3b68594c480d type=OVER_CAPACITY zone=parking_area track=65
+2026-07-27 13:56:38,666 [INFO] app.events.event_manager: New event: 131617dd-fdc3-4dc3-9eb8-082e93b9c44c type=OVER_CAPACITY zone=parking_area track=72
+2026-07-27 13:56:38,667 [INFO] app.events.event_manager: New event: c4a9a5fc-fe83-409a-ad3d-0ee154a89cb4 type=OVER_CAPACITY zone=parking_area track=78
+2026-07-27 13:56:38,667 [INFO] app.events.event_manager: New event: 355c5a35-d6fb-4246-a3d9-e00e17363b1a type=OVER_CAPACITY zone=parking_area track=80
+2026-07-27 13:56:38,667 [INFO] app.events.event_manager: New event: 2405b3b1-8559-48d6-892a-bb3a92aaa3a3 type=OVER_CAPACITY zone=parking_area track=81
+2026-07-27 13:56:38,667 [INFO] app.events.event_manager: New event: edf16a01-4543-41f2-9012-4b5fd3415726 type=OVER_CAPACITY zone=parking_area track=82
+2026-07-27 13:56:38,667 [INFO] app.events.event_manager: New event: e28b5b86-0293-44e8-b45d-c5536c322d45 type=OVER_CAPACITY zone=parking_area track=83
+2026-07-27 13:56:38,667 [INFO] app.events.event_manager: New event: d92cb1eb-72ed-4d2d-a1b6-25509ce90d52 type=ZONE_INTRUSION zone=no_parking_zone track=101
+2026-07-27 13:56:38,667 [INFO] experiments:   Resolution 640x640: FPS=25.0 P=0.197 R=0.750
+2026-07-27 13:56:38,667 [INFO] app.events.event_manager: New event: 5cf1769d-5bf4-4fb7-97f9-39f810dee22e type=ZONE_INTRUSION zone=false_zone track=5004
+2026-07-27 13:56:38,667 [INFO] app.events.event_manager: New event: ffbe5fcc-1f4b-447e-9142-385c63388cf9 type=ZONE_INTRUSION zone=no_parking_zone track=11
+2026-07-27 13:56:38,667 [INFO] app.events.event_manager: New event: 5f14b251-c023-4ea7-a92c-1f11a9905955 type=ZONE_INTRUSION zone=no_parking_zone track=12
+2026-07-27 13:56:38,667 [INFO] app.events.event_manager: New event: 410dd237-b3c9-4b04-b5a4-15118a05ddb0 type=ZONE_INTRUSION zone=no_parking_zone track=13
+2026-07-27 13:56:38,667 [INFO] app.events.event_manager: New event: 72e82202-18bf-4418-aa33-e219d098ba9d type=ZONE_INTRUSION zone=no_parking_zone track=14
+2026-07-27 13:56:38,667 [INFO] app.events.event_manager: New event: 203f484c-a53b-4df1-8071-c6bd9fad1fdf type=LOITERING zone=parking_area track=21
+2026-07-27 13:56:38,667 [INFO] app.events.event_manager: New event: e1e2733f-96e6-4df1-b6a1-e9a22fa1b95c type=LINE_CROSS_IN zone=entrance_lane track=31
+2026-07-27 13:56:38,667 [INFO] app.events.event_manager: New event: 764b104e-f330-4b66-a551-9300b5953774 type=LINE_CROSS_IN zone=entrance_lane track=32
+2026-07-27 13:56:38,667 [INFO] app.events.event_manager: New event: 2fb417d8-1d35-4edd-baf6-715055c079dc type=LINE_CROSS_IN zone=entrance_lane track=33
+2026-07-27 13:56:38,667 [INFO] app.events.event_manager: New event: ad93cd41-9475-4ec9-8ae3-8786a9016458 type=WRONG_DIRECTION zone=entrance_lane track=41
+2026-07-27 13:56:38,667 [INFO] app.events.event_manager: New event: 16551c58-b835-4dec-88aa-3ae9873d57b4 type=WRONG_DIRECTION zone=entrance_lane track=42
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: 346e8199-8c7b-4610-9177-ca5e4a2b5b7a type=OVER_CAPACITY zone=parking_area track=50
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: 7a91de27-6029-459e-aecb-981651f09559 type=OVER_CAPACITY zone=parking_area track=51
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: 5695d8c4-6f72-44f2-9f17-c069d9fd0f29 type=OVER_CAPACITY zone=parking_area track=54
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: d35a386a-006e-4412-a1bf-d04632f3f5a2 type=OVER_CAPACITY zone=parking_area track=56
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: 4cd51e0f-f618-4a25-bacb-b25ecbb3422b type=OVER_CAPACITY zone=parking_area track=57
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: 8e59dfbc-c515-4751-9eb1-5a5d28ca38e7 type=OVER_CAPACITY zone=parking_area track=58
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: abeead17-df0e-4e94-858b-d67ac10214d0 type=OVER_CAPACITY zone=parking_area track=59
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: ba6dfb15-d9d4-442f-b234-e4cde35b5226 type=OVER_CAPACITY zone=parking_area track=60
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: bfd5258e-028f-410d-ba96-bcf5f7c230f0 type=OVER_CAPACITY zone=parking_area track=61
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: f953861c-2199-47bf-9870-3be43dd2701e type=OVER_CAPACITY zone=parking_area track=62
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: f51cb4c5-ea9c-428b-8667-860f37cd4600 type=OVER_CAPACITY zone=parking_area track=63
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: 8d080a09-1026-4c53-a98c-221c26189591 type=OVER_CAPACITY zone=parking_area track=64
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: 3b71a629-166f-4880-aedb-ba0cf11be51b type=OVER_CAPACITY zone=parking_area track=65
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: 94bd6eac-4940-414f-9e77-1b9ca166b10a type=OVER_CAPACITY zone=parking_area track=66
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: e5e83758-e4b6-41f8-b258-fbfeba8920b6 type=OVER_CAPACITY zone=parking_area track=67
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: 89ebbadb-761e-437a-a60d-c2d086c014bb type=OVER_CAPACITY zone=parking_area track=69
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: cb6376dc-98f5-40e5-a512-2cd768e3d82a type=OVER_CAPACITY zone=parking_area track=71
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: 385f0b97-571d-427a-b95a-72721ace29d1 type=OVER_CAPACITY zone=parking_area track=72
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: e2d283d8-4c5c-4a84-b1e1-fa1633015a4c type=OVER_CAPACITY zone=parking_area track=74
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: 73e6a765-0aaa-4660-a599-c18f4408fb46 type=OVER_CAPACITY zone=parking_area track=75
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: b1eb9e9a-347d-43ea-b4c9-a67e2cd8cbd7 type=OVER_CAPACITY zone=parking_area track=76
+2026-07-27 13:56:38,668 [INFO] app.events.event_manager: New event: 374b3bc0-29fe-430c-817b-b2e78d8ca9fd type=OVER_CAPACITY zone=parking_area track=78
+2026-07-27 13:56:38,669 [INFO] app.events.event_manager: New event: 895f6d96-47f8-4be1-bc95-7fe6996984f7 type=OVER_CAPACITY zone=parking_area track=79
+2026-07-27 13:56:38,669 [INFO] app.events.event_manager: New event: 71140f00-0668-498f-8411-729af73b2d27 type=OVER_CAPACITY zone=parking_area track=68
+2026-07-27 13:56:38,669 [INFO] app.events.event_manager: New event: 94b91914-feb4-4f7a-b470-fa03c97802df type=OVER_CAPACITY zone=parking_area track=70
+2026-07-27 13:56:38,669 [INFO] app.events.event_manager: New event: a530b88a-a79e-4ee4-8d94-efa1daf89259 type=OVER_CAPACITY zone=parking_area track=73
+2026-07-27 13:56:38,669 [INFO] app.events.event_manager: New event: 9a2a1859-11d6-4adb-8ba8-e6a9df82848c type=OVER_CAPACITY zone=parking_area track=77
+2026-07-27 13:56:38,669 [INFO] app.events.event_manager: New event: 8c9001fb-0167-4c37-be10-2194f9b1189c type=OVER_CAPACITY zone=parking_area track=80
+2026-07-27 13:56:38,669 [INFO] app.events.event_manager: New event: e0fcbc0e-5b83-4f7d-8222-7919075b5df9 type=OVER_CAPACITY zone=parking_area track=82
+2026-07-27 13:56:38,669 [INFO] app.events.event_manager: New event: 9c67cdc9-fbf3-457f-afa5-eefa679cf37f type=OVER_CAPACITY zone=parking_area track=83
+2026-07-27 13:56:38,669 [INFO] app.events.event_manager: New event: a3a6fdfe-d0d3-4974-8958-b03bd7e4a999 type=OVER_CAPACITY zone=parking_area track=84
+2026-07-27 13:56:38,669 [INFO] app.events.event_manager: New event: f00a2184-4ea5-41bf-b27a-458f550bf779 type=LOITERING zone=parking_area track=100
+2026-07-27 13:56:38,669 [INFO] app.events.event_manager: New event: 02a22cbf-b145-447b-8b52-50b762701f2a type=ZONE_INTRUSION zone=no_parking_zone track=101
+2026-07-27 13:56:38,669 [INFO] experiments:   Resolution 960x960: FPS=11.1 P=0.222 R=0.875
+2026-07-27 13:56:38,669 [INFO] experiments: All experiments complete: 12 data points
+2026-07-27 13:56:38,670 [INFO] experiments: Results saved to evaluation/results/experiments_20260727_135638.csv
+2026-07-27 13:56:50,978 [INFO] app.api.websocket: WebSocket client disconnected. Total: 0
+2026-07-27 14:03:53,408 [INFO] app.api.websocket: WebSocket client connected. Total: 1
+2026-07-27 14:04:10,970 [INFO] app.vision.tracker: ByteTrack initialized successfully
+2026-07-27 14:04:10,970 [INFO] app.vision.tracker: Tracker reset
+2026-07-27 14:04:10,970 [INFO] app.pipeline: Pipeline started with source: 1785143050_Fixed_static_overhead_securit.mp4
+2026-07-27 14:04:11,013 [INFO] app.vision.video_source: Opened file source: uploads/1785143050_Fixed_static_overhead_securit.mp4 (24.0 fps)
+2026-07-27 14:04:11,152 [INFO] app.analytics.performance: Perf | FPS=1.0 | Total=40ms | Det=40ms | Track=0ms | CPU=8% | MEM=213MB | Bottleneck=detection
+2026-07-27 14:04:19,711 [WARNING] app.analytics.lines: WRONG DIRECTION: track 8 crossed 'entrance_lane' going B_to_A (expected A_to_B)
+2026-07-27 14:04:19,712 [WARNING] app.rules.direction: Wrong direction: track=8 zone=entrance_lane direction=B_to_A
+2026-07-27 14:04:19,715 [INFO] app.events.alerts: [SIMULATED WEBHOOK] POST https://webhook.example.com/alerts
+Payload: {
+  "alert_id": "8ac46668-cd3f-496a-aad7-69107e0ad6a3",
+  "event_type": "WRONG_DIRECTION",
+  "severity": "CRITICAL",
+  "source_id": "1785143050_Fixed_static_overhead_securit.mp4",
+  "zone_id": "entrance_lane",
+  "zone_name": "Entrance Gate Lane",
+  "track_id": 8,
+  "class_name": "truck",
+  "description": "Truck #8 crossed 'Entrance Gate Lane' in wrong direction (B_to_A, expected A_to_B)",
+  "timestamp": 1785143059.712338,
+  "evidence_path": "evidence/8ac46668-cd3f-496a-aad7-69107e0ad6a3",
+  "metadata": {
+    "actual_direction": "B_to_A",
+    "expected_direction": "A_to_B",
+    "centroid": [
+      352.0,
+      120.5
+    ]
+  }
+}
+2026-07-27 14:04:19,715 [INFO] app.events.alerts: [SIMULATED EMAIL] To: admin@example.com
+Subject: [CRITICAL] WRONG_DIRECTION — Entrance Gate Lane
+Body: Truck #8 crossed 'Entrance Gate Lane' in wrong direction (B_to_A, expected A_to_B)
+Evidence: evidence/8ac46668-cd3f-496a-aad7-69107e0ad6a3
+Full payload: {
+  "alert_id": "8ac46668-cd3f-496a-aad7-69107e0ad6a3",
+  "event_type": "WRONG_DIRECTION",
+  "severity": "CRITICAL",
+  "source_id": "1785143050_Fixed_static_overhead_securit.mp4",
+  "zone_id": "entrance_lane",
+  "zone_name": "Entrance Gate Lane",
+  "track_id": 8,
+  "class_name": "truck",
+  "description": "Truck #8 crossed 'Entrance Gate Lane' in wrong direction (B_to_A, expected A_to_B)",
+  "timestamp": 1785143059.712338,
+  "evidence_path": "evidence/8ac46668-cd3f-496a-aad7-69107e0ad6a3",
+  "metadata": {
+    "actual_direction": "B_to_A",
+    "expected_direction": "A_to_B",
+    "centroid": [
+      352.0,
+      120.5
+    ]
+  }
+}
+2026-07-27 14:04:19,715 [INFO] app.events.event_manager: New event: 8ac46668-cd3f-496a-aad7-69107e0ad6a3 type=WRONG_DIRECTION zone=entrance_lane track=8
+2026-07-27 14:04:21,190 [INFO] app.analytics.performance: Perf | FPS=22.0 | Total=43ms | Det=42ms | Track=0ms | CPU=209% | MEM=426MB | Bottleneck=detection
+2026-07-27 14:04:22,571 [INFO] app.vision.video_source: File source '1785143050_Fixed_static_overhead_securit.mp4' reached end of video
+2026-07-27 14:04:22,573 [INFO] app.vision.video_source: Video source '1785143050_Fixed_static_overhead_securit.mp4' released
+2026-07-27 14:04:22,573 [INFO] app.pipeline: Processing loop ended
+2026-07-27 14:04:33,663 [INFO] app.pipeline: Pipeline stopped
+2026-07-27 15:28:12,585 [INFO] app.database.repository: Database initialized: sqlite+aiosqlite:///./data/events.db
+2026-07-27 15:28:12,586 [INFO] app.events.alerts: AlertEngine initialized with 3 channels: ['InAppWebSocketChannel', 'SimulatedWebhookChannel', 'SimulatedEmailChannel']
+2026-07-27 15:28:13,905 [INFO] app.vision.detector: Loading YOLO model: yolov8n.pt on device=cpu
+2026-07-27 15:28:14,798 [INFO] app.vision.detector: YOLO model loaded successfully: yolov8n.pt
+2026-07-27 15:28:15,331 [INFO] app.vision.tracker: ByteTrack initialized successfully
+2026-07-27 15:28:15,333 [INFO] app.analytics.zones: ZoneManager initialized with 3 zones
+2026-07-27 15:28:15,333 [INFO] app.analytics.lines: LineCrossingMonitor initialized with 1 line zones
+2026-07-27 15:28:15,334 [INFO] app.analytics.occupancy: OccupancyMonitor initialized for 2 zones
+2026-07-27 15:28:15,334 [INFO] app.rules: Registered rule: parking_violation (ParkingViolationRule)
+2026-07-27 15:28:15,334 [INFO] app.rules: Registered rule: intrusion (IntrusionRule)
+2026-07-27 15:28:15,334 [INFO] app.rules: Registered rule: loitering (LoiteringRule)
+2026-07-27 15:28:15,334 [INFO] app.rules: Registered rule: over_capacity (OccupancyRule)
+2026-07-27 15:28:15,334 [INFO] app.rules: Registered rule: wrong_direction (WrongDirectionRule)
+2026-07-27 15:28:15,334 [INFO] app.pipeline: Pipeline initialized: 5 rules, 3 zones
+2026-07-27 15:28:15,334 [INFO] app.main: Application started. Dashboard at http://localhost:8000
+2026-07-27 15:28:15,334 [INFO] app.main: DB writer started
+2026-07-27 15:28:27,569 [INFO] app.api.websocket: WebSocket client connected. Total: 1
+2026-07-27 15:30:37,150 [INFO] app.api.websocket: WebSocket client disconnected. Total: 0
+2026-07-27 15:30:37,251 [INFO] app.main: Application shutdown complete.
+2026-07-30 13:33:44,578 [INFO] app.database.repository: Database initialized: sqlite+aiosqlite:///./data/events.db
+2026-07-30 13:33:44,578 [INFO] app.events.alerts: AlertEngine initialized with 3 channels: ['InAppWebSocketChannel', 'SimulatedWebhookChannel', 'SimulatedEmailChannel']
+2026-07-30 13:34:05,474 [WARNING] matplotlib.font_manager: Matplotlib is building the font cache; this may take a moment.
+2026-07-30 13:34:11,196 [INFO] matplotlib.font_manager: Failed to extract font properties from /System/Library/Fonts/LastResort.otf: tuple indices must be integers or slices, not str
+2026-07-30 13:34:11,243 [INFO] matplotlib.font_manager: Failed to extract font properties from /System/Library/PrivateFrameworks/FontServices.framework/Resources/Reserved/PingFangUI.ttc: FT_Open_Face (ft2font.cpp line 200) failed with error 0x02: unknown file format
+2026-07-30 13:34:11,306 [INFO] matplotlib.font_manager: Failed to extract font properties from /System/Library/Fonts/Supplemental/NISC18030.ttf: Non-scalable fonts are not supported
+2026-07-30 13:34:11,470 [INFO] matplotlib.font_manager: Failed to extract font properties from /System/Library/Fonts/Apple Color Emoji.ttc: Non-scalable fonts are not supported
+2026-07-30 13:34:11,536 [INFO] matplotlib.font_manager: generated new fontManager
+2026-07-30 13:34:11,754 [INFO] app.vision.detector: Loading YOLO model: yolov8n.pt on device=cpu
+2026-07-30 13:34:19,246 [INFO] app.vision.detector: YOLO model loaded successfully: yolov8n.pt
+2026-07-30 13:34:42,975 [INFO] app.vision.tracker: ByteTrack initialized successfully
+2026-07-30 13:34:42,976 [INFO] app.analytics.zones: ZoneManager initialized with 3 zones
+2026-07-30 13:34:42,976 [INFO] app.analytics.lines: LineCrossingMonitor initialized with 1 line zones
+2026-07-30 13:34:42,976 [INFO] app.analytics.occupancy: OccupancyMonitor initialized for 2 zones
+2026-07-30 13:34:42,976 [INFO] app.rules: Registered rule: parking_violation (ParkingViolationRule)
+2026-07-30 13:34:42,976 [INFO] app.rules: Registered rule: intrusion (IntrusionRule)
+2026-07-30 13:34:42,977 [INFO] app.rules: Registered rule: loitering (LoiteringRule)
+2026-07-30 13:34:42,977 [INFO] app.rules: Registered rule: over_capacity (OccupancyRule)
+2026-07-30 13:34:42,977 [INFO] app.rules: Registered rule: wrong_direction (WrongDirectionRule)
+2026-07-30 13:34:42,977 [INFO] app.pipeline: Pipeline initialized: 5 rules, 3 zones
+2026-07-30 13:34:42,977 [INFO] app.main: Application started. Dashboard at http://localhost:8000
+2026-07-30 13:34:42,977 [INFO] app.main: DB writer started
+2026-07-30 13:35:08,147 [INFO] app.api.websocket: WebSocket client connected. Total: 1
+2026-07-30 13:35:30,218 [INFO] app.api.websocket: WebSocket client connected. Total: 2
+2026-07-30 13:35:38,149 [INFO] app.api.websocket: WebSocket client disconnected. Total: 1
+2026-07-30 13:38:00,762 [INFO] app.api.websocket: WebSocket client disconnected. Total: 0
+2026-07-30 13:38:04,762 [INFO] app.api.websocket: WebSocket client connected. Total: 1
+2026-07-30 13:42:55,755 [INFO] app.api.websocket: WebSocket client disconnected. Total: 0
+2026-07-30 13:42:59,756 [INFO] app.api.websocket: WebSocket client connected. Total: 1
+2026-07-30 13:45:50,750 [INFO] app.api.websocket: WebSocket client disconnected. Total: 0
+2026-07-30 13:45:54,755 [INFO] app.api.websocket: WebSocket client connected. Total: 1
+2026-07-30 13:48:25,739 [INFO] app.api.websocket: WebSocket client disconnected. Total: 0
+2026-07-30 13:48:29,742 [INFO] app.api.websocket: WebSocket client connected. Total: 1
+2026-07-30 13:51:00,737 [INFO] app.api.websocket: WebSocket client disconnected. Total: 0
+2026-07-30 13:51:04,743 [INFO] app.api.websocket: WebSocket client connected. Total: 1
+2026-07-30 13:53:35,733 [INFO] app.api.websocket: WebSocket client disconnected. Total: 0
+2026-07-30 13:53:39,750 [INFO] app.api.websocket: WebSocket client connected. Total: 1

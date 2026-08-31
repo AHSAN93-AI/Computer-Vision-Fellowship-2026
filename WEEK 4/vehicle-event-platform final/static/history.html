@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vehicle Event Platform — Event History</title>
+  <meta name="description" content="Intelligent Vehicle Event Detection Platform — Event history, filtering, evidence viewing, and acknowledgment.">
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+<!-- ── Navigation ───────────────────────────────────────────────── -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <a href="/" class="navbar-brand" id="nav-brand">
+    <div class="logo-icon" aria-hidden="true">🚗</div>
+    VehicleSense
+  </a>
+  <ul class="navbar-nav" role="list">
+    <li><a href="/" id="nav-dashboard">📊 Dashboard</a></li>
+    <li><a href="/history.html" class="active" id="nav-history">📋 Event History</a></li>
+    <li><a href="/docs" id="nav-api" target="_blank">🔌 API Docs</a></li>
+  </ul>
+  <div class="navbar-status">
+    <span style="font-size:0.78rem;color:var(--text-muted)" id="event-count-badge">Loading...</span>
+  </div>
+</nav>
+
+<main class="container" role="main">
+
+  <div class="page-header" style="display:flex;align-items:center;justify-content:space-between">
+    <div>
+      <h1 class="page-title">Event History</h1>
+      <p class="page-subtitle">Browse, filter, and manage all recorded events</p>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost" id="refresh-btn">🔄 Refresh</button>
+      <a id="csv-export-btn" class="btn btn-ghost" href="/api/events/export/csv" download="events.csv">
+        ⬇ Export CSV
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Filters ─────────────────────────────────────────────────── -->
+  <div class="filter-bar" id="filter-bar" role="search" aria-label="Event filters">
+
+    <div class="form-group">
+      <label for="filter-type">Event Type</label>
+      <select id="filter-type" name="event_type">
+        <option value="">All Types</option>
+        <option value="ZONE_ENTRY">Zone Entry</option>
+        <option value="ZONE_EXIT">Zone Exit</option>
+        <option value="LOITERING">Loitering</option>
+        <option value="PARKING_VIOLATION">Parking Violation</option>
+        <option value="ZONE_INTRUSION">Zone Intrusion</option>
+        <option value="WRONG_DIRECTION">Wrong Direction</option>
+        <option value="OVER_CAPACITY">Over Capacity</option>
+        <option value="LINE_CROSS_IN">Line Cross (In)</option>
+        <option value="LINE_CROSS_OUT">Line Cross (Out)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="filter-severity">Severity</label>
+      <select id="filter-severity" name="severity">
+        <option value="">All Severities</option>
+        <option value="CRITICAL">Critical</option>
+        <option value="HIGH">High</option>
+        <option value="WARNING">Warning</option>
+        <option value="INFO">Info</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="filter-status">Status</label>
+      <select id="filter-status" name="status">
+        <option value="">All Statuses</option>
+        <option value="ACTIVE">Active</option>
+        <option value="DETECTED">Detected</option>
+        <option value="ACKNOWLEDGED">Acknowledged</option>
+        <option value="RESOLVED">Resolved</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="filter-zone">Zone ID</label>
+      <input type="text" id="filter-zone" placeholder="e.g. parking_area" name="zone_id">
+    </div>
+
+    <div class="form-group">
+      <label for="filter-start">From</label>
+      <input type="datetime-local" id="filter-start" name="start_time">
+    </div>
+
+    <div class="form-group">
+      <label for="filter-end">To</label>
+      <input type="datetime-local" id="filter-end" name="end_time">
+    </div>
+
+    <div style="display:flex;gap:8px;align-items:flex-end;padding-bottom:1px">
+      <button class="btn btn-primary" id="apply-filters-btn">🔍 Apply</button>
+      <button class="btn btn-ghost" id="clear-filters-btn">✕ Clear</button>
+    </div>
+
+  </div>
+
+  <!-- ── Results Summary ────────────────────────────────────────── -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <p class="text-muted" style="font-size:0.8rem" id="results-summary">Loading events...</p>
+    <div style="display:flex;align-items:center;gap:8px">
+      <label for="page-size-select" class="text-muted" style="font-size:0.78rem">Per page:</label>
+      <select id="page-size-select" style="width:auto;padding:5px 28px 5px 10px">
+        <option value="20">20</option>
+        <option value="50" selected>50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ── Events Table ───────────────────────────────────────────── -->
+  <div class="table-container" id="events-table-container">
+    <table id="events-table" aria-label="Event history table">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Type</th>
+          <th>Severity</th>
+          <th>Track</th>
+          <th>Class</th>
+          <th>Zone</th>
+          <th>Duration</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="events-tbody">
+        <tr>
+          <td colspan="9" style="text-align:center;padding:32px;color:var(--text-muted)">
+            <div class="spinner" style="margin:0 auto 12px"></div>
+            Loading events...
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── Pagination ─────────────────────────────────────────────── -->
+  <div class="pagination" id="pagination" aria-label="Page navigation"></div>
+
+</main>
+
+<!-- ── Evidence Modal ────────────────────────────────────────────── -->
+<div class="modal-overlay" id="evidence-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal" id="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-title">Event Details</h2>
+      <button class="modal-close" id="modal-close-btn" aria-label="Close modal">×</button>
+    </div>
+
+    <div id="modal-body">
+      <!-- Dynamic content injected here -->
+    </div>
+  </div>
+</div>
+
+<!-- ── Toast Container ────────────────────────────────────────────── -->
+<div id="toast-container" aria-live="polite"></div>
+
+<script type="module">
+import * as api from '/static/js/api.js';
+
+// ─── State ───────────────────────────────────────────────────────
+const state = {
+  page: 1,
+  pageSize: 50,
+  total: 0,
+  filters: {},
+};
+
+// ─── Helpers ─────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+
+function escHtml(str) {
+  return String(str || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function fmtTime(ts) {
+  if (!ts) return '—';
+  return new Date(ts * 1000).toLocaleString();
+}
+
+function fmtDuration(s) {
+  if (!s) return '—';
+  if (s < 60)  return `${s.toFixed(0)}s`;
+  if (s < 3600) return `${(s/60).toFixed(1)}m`;
+  return `${(s/3600).toFixed(1)}h`;
+}
+
+function severityBadge(sev) {
+  const cls = { CRITICAL:'badge-critical', HIGH:'badge-danger', WARNING:'badge-warning', INFO:'badge-info' };
+  return `<span class="badge ${cls[sev]||'badge-info'}">${escHtml(sev)}</span>`;
+}
+
+function statusBadge(st) {
+  const cls = { ACTIVE:'badge-active', DETECTED:'badge-active', ACKNOWLEDGED:'badge-ack', RESOLVED:'badge-resolved' };
+  return `<span class="badge ${cls[st]||'badge-info'}">${escHtml(st)}</span>`;
+}
+
+function toast(msg, type='info', dur=4000) {
+  const container = $('toast-container');
+  if (!container) return;
+  const icons = { success:'✅', error:'❌', warning:'⚠️', info:'ℹ️' };
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  container.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transition='opacity 0.3s'; setTimeout(()=>t.remove(),300); }, dur);
+}
+
+// ─── Load Events ─────────────────────────────────────────────────
+async function loadEvents() {
+  const tbody = $('events-tbody');
+  const summary = $('results-summary');
+  if (tbody) tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--text-muted)"><div class="spinner" style="margin:0 auto 12px"></div>Loading...</td></tr>`;
+
+  try {
+    const params = {
+      ...state.filters,
+      page: state.page,
+      page_size: state.pageSize,
+    };
+    const result = await api.listEvents(params);
+    state.total = result.total || 0;
+
+    if (summary) {
+      summary.textContent = `${state.total} events found · Page ${state.page}`;
+    }
+
+    $('event-count-badge').textContent = `${state.total} total events`;
+
+    renderTable(result.events || []);
+    renderPagination();
+    updateCsvLink();
+  } catch (e) {
+    if (tbody) tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--danger);padding:24px">Failed to load events</td></tr>`;
+    toast('Failed to load events', 'error');
+  }
+}
+
+// ─── Render Table ─────────────────────────────────────────────────
+function renderTable(events) {
+  const tbody = $('events-tbody');
+  if (!tbody) return;
+
+  if (events.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--text-muted)">No events match your filters</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = events.map(ev => `
+    <tr data-event-id="${escHtml(ev.event_id)}" id="row-${escHtml(ev.event_id)}">
+      <td class="mono" style="font-size:0.78rem;white-space:nowrap">${fmtTime(ev.created_at)}</td>
+      <td style="color:var(--text-primary);font-size:0.82rem">${escHtml(ev.event_type?.replace(/_/g,' '))}</td>
+      <td>${severityBadge(ev.severity)}</td>
+      <td class="mono">${ev.track_id != null ? `#${ev.track_id}` : '—'}</td>
+      <td>${ev.class_name ? `<span class="badge badge-info" style="font-size:0.68rem">${escHtml(ev.class_name)}</span>` : '—'}</td>
+      <td style="font-size:0.8rem">${escHtml(ev.zone_name || ev.zone_id)}</td>
+      <td class="mono" style="font-size:0.78rem">${fmtDuration(ev.duration_seconds)}</td>
+      <td>${statusBadge(ev.status)}</td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <button class="btn btn-ghost btn-sm view-btn" data-id="${escHtml(ev.event_id)}" title="View details" aria-label="View event details">👁</button>
+          ${ev.status==='ACTIVE'||ev.status==='DETECTED' ? `
+            <button class="btn btn-ghost btn-sm ack-btn" data-id="${escHtml(ev.event_id)}" title="Acknowledge" aria-label="Acknowledge event">✓</button>
+            <button class="btn btn-danger btn-sm res-btn" data-id="${escHtml(ev.event_id)}" title="Resolve" aria-label="Resolve event">✕</button>
+          ` : ev.status==='ACKNOWLEDGED' ? `
+            <button class="btn btn-danger btn-sm res-btn" data-id="${escHtml(ev.event_id)}" title="Resolve" aria-label="Resolve event">✕</button>
+          ` : ''}
+        </div>
+      </td>
+    </tr>
+  `).join('');
+
+  // Bind action buttons
+  tbody.querySelectorAll('.view-btn').forEach(btn =>
+    btn.addEventListener('click', () => openModal(btn.dataset.id))
+  );
+  tbody.querySelectorAll('.ack-btn').forEach(btn =>
+    btn.addEventListener('click', () => ackEvent(btn.dataset.id))
+  );
+  tbody.querySelectorAll('.res-btn').forEach(btn =>
+    btn.addEventListener('click', () => resolveEvent(btn.dataset.id))
+  );
+}
+
+// ─── Pagination ───────────────────────────────────────────────────
+function renderPagination() {
+  const container = $('pagination');
+  if (!container) return;
+  const totalPages = Math.max(1, Math.ceil(state.total / state.pageSize));
+  if (totalPages <= 1) { container.innerHTML = ''; return; }
+
+  let html = `<button class="pagination-btn" ${state.page<=1?'disabled':''} id="pg-prev">← Prev</button>`;
+
+  const start = Math.max(1, state.page-2);
+  const end   = Math.min(totalPages, state.page+2);
+  if (start > 1) html += `<button class="pagination-btn" data-pg="1">1</button>${start>2?'<span style="color:var(--text-muted);padding:0 4px">…</span>':''}`;
+
+  for (let i=start; i<=end; i++) {
+    html += `<button class="pagination-btn ${i===state.page?'active':''}" data-pg="${i}">${i}</button>`;
+  }
+
+  if (end < totalPages) html += `${end<totalPages-1?'<span style="color:var(--text-muted);padding:0 4px">…</span>':''}<button class="pagination-btn" data-pg="${totalPages}">${totalPages}</button>`;
+  html += `<button class="pagination-btn" ${state.page>=totalPages?'disabled':''} id="pg-next">Next →</button>`;
+
+  container.innerHTML = html;
+
+  container.querySelector('#pg-prev')?.addEventListener('click', () => { state.page--; loadEvents(); });
+  container.querySelector('#pg-next')?.addEventListener('click', () => { state.page++; loadEvents(); });
+  container.querySelectorAll('[data-pg]').forEach(btn =>
+    btn.addEventListener('click', () => { state.page = parseInt(btn.dataset.pg); loadEvents(); })
+  );
+}
+
+// ─── Event Actions ────────────────────────────────────────────────
+async function ackEvent(id) {
+  try {
+    await api.acknowledgeEvent(id);
+    toast('Event acknowledged', 'success');
+    loadEvents();
+  } catch (e) {
+    toast('Acknowledge failed: ' + e.message, 'error');
+  }
+}
+
+async function resolveEvent(id) {
+  try {
+    await api.resolveEvent(id);
+    toast('Event resolved', 'success');
+    loadEvents();
+  } catch (e) {
+    toast('Resolve failed: ' + e.message, 'error');
+  }
+}
+
+// ─── Evidence Modal ───────────────────────────────────────────────
+async function openModal(eventId) {
+  const overlay = $('evidence-modal');
+  const body    = $('modal-body');
+  const title   = $('modal-title');
+
+  if (!overlay || !body) return;
+
+  body.innerHTML = `<div style="text-align:center;padding:32px"><div class="spinner" style="margin:0 auto"></div></div>`;
+  overlay.classList.add('open');
+
+  const ev = await api.getEvent(eventId);
+  if (!ev) {
+    body.innerHTML = `<p class="text-danger">Event not found</p>`;
+    return;
+  }
+
+  if (title) title.textContent = `${ev.event_type?.replace(/_/g,' ')} — ${ev.zone_name||ev.zone_id}`;
+
+  const evPath = ev.evidence_path;
+  const imgSection = evPath
+    ? `<div style="margin-bottom:16px">
+         <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:8px">Evidence Image</p>
+         <img src="/evidence/${evPath.split('/').filter(Boolean).pop()}/frame.jpg" class="evidence-img" alt="Event evidence"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+         <p style="display:none;color:var(--text-muted);font-size:0.8rem">Evidence image not available</p>
+       </div>`
+    : `<div style="padding:16px;text-align:center;color:var(--text-muted);font-size:0.8rem;margin-bottom:16px;border:1px dashed var(--border);border-radius:8px">No evidence image</div>`;
+
+  body.innerHTML = `
+    ${imgSection}
+    <div class="grid grid-2" style="gap:10px;margin-bottom:14px">
+      ${metaRow('Event ID', `<span class="mono" style="font-size:0.75rem">${ev.event_id}</span>`)}
+      ${metaRow('Status', statusBadge(ev.status))}
+      ${metaRow('Type', ev.event_type?.replace(/_/g,' '))}
+      ${metaRow('Severity', severityBadge(ev.severity))}
+      ${metaRow('Track ID', ev.track_id!=null?`#${ev.track_id}`:'—')}
+      ${metaRow('Class', ev.class_name || '—')}
+      ${metaRow('Zone', ev.zone_name || ev.zone_id || '—')}
+      ${metaRow('Duration', fmtDuration(ev.duration_seconds))}
+      ${metaRow('Created', fmtTime(ev.created_at))}
+      ${metaRow('Resolved', fmtTime(ev.resolved_at))}
+      ${metaRow('Confidence', ev.confidence!=null?(ev.confidence*100).toFixed(1)+'%':'—')}
+      ${metaRow('Source', ev.source_id||'—')}
+    </div>
+    ${ev.description ? `<div style="padding:12px;background:var(--bg-glass);border-radius:8px;font-size:0.82rem;color:var(--text-secondary)">${escHtml(ev.description)}</div>` : ''}
+    <div style="display:flex;gap:8px;margin-top:16px">
+      ${ev.status==='ACTIVE'||ev.status==='DETECTED' ? `
+        <button class="btn btn-primary modal-ack-btn" data-id="${ev.event_id}">✓ Acknowledge</button>
+        <button class="btn btn-danger modal-res-btn" data-id="${ev.event_id}">✕ Resolve</button>
+      ` : ev.status==='ACKNOWLEDGED' ? `
+        <button class="btn btn-danger modal-res-btn" data-id="${ev.event_id}">✕ Resolve</button>
+      ` : ''}
+    </div>
+  `;
+
+  body.querySelector('.modal-ack-btn')?.addEventListener('click', async (e) => {
+    await ackEvent(e.target.dataset.id); closeModal();
+  });
+  body.querySelector('.modal-res-btn')?.addEventListener('click', async (e) => {
+    await resolveEvent(e.target.dataset.id); closeModal();
+  });
+}
+
+function metaRow(label, val) {
+  return `<div style="padding:8px;background:var(--bg-glass);border-radius:6px;border:1px solid var(--border)">
+    <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2px">${label}</div>
+    <div style="font-size:0.82rem;color:var(--text-primary)">${val}</div>
+  </div>`;
+}
+
+function closeModal() {
+  $('evidence-modal')?.classList.remove('open');
+}
+
+// ─── Filters ─────────────────────────────────────────────────────
+function readFilters() {
+  const f = {};
+  const type = $('filter-type')?.value;
+  const sev  = $('filter-severity')?.value;
+  const st   = $('filter-status')?.value;
+  const zone = $('filter-zone')?.value?.trim();
+  const from = $('filter-start')?.value;
+  const to   = $('filter-end')?.value;
+
+  if (type) f.event_type = type;
+  if (sev)  f.severity   = sev;
+  if (st)   f.status     = st;
+  if (zone) f.zone_id    = zone;
+  if (from) f.start_time = new Date(from).getTime() / 1000;
+  if (to)   f.end_time   = new Date(to).getTime() / 1000;
+  return f;
+}
+
+function updateCsvLink() {
+  const btn = $('csv-export-btn');
+  if (!btn) return;
+  const params = new URLSearchParams();
+  Object.entries(state.filters).forEach(([k, v]) => params.set(k, v));
+  btn.href = `/api/events/export/csv?${params}`;
+}
+
+// ─── Wire up events ───────────────────────────────────────────────
+$('apply-filters-btn')?.addEventListener('click', () => {
+  state.filters = readFilters();
+  state.page = 1;
+  loadEvents();
+});
+
+$('clear-filters-btn')?.addEventListener('click', () => {
+  ['filter-type','filter-severity','filter-status','filter-zone','filter-start','filter-end']
+    .forEach(id => { const el=$(id); if(el) el.value=''; });
+  state.filters = {};
+  state.page = 1;
+  loadEvents();
+});
+
+$('refresh-btn')?.addEventListener('click', () => loadEvents());
+
+$('page-size-select')?.addEventListener('change', (e) => {
+  state.pageSize = parseInt(e.target.value);
+  state.page = 1;
+  loadEvents();
+});
+
+$('modal-close-btn')?.addEventListener('click', closeModal);
+$('evidence-modal')?.addEventListener('click', (e) => {
+  if (e.target === $('evidence-modal')) closeModal();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ─── Init ─────────────────────────────────────────────────────────
+loadEvents();
+</script>
+
+</body>
+</html>
